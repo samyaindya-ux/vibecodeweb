@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeCodeWeb.in | Next-Gen Web & AI Solutions</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☸️</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ============================================================
+       VARIABLES & RESET
+       ============================================================ */
+    :root {
+      --bg:        #060b18;
+      --bg2:       #0a1020;
+      --surface:   rgba(255,255,255,0.03);
+      --surface2:  rgba(255,255,255,0.06);
+      --border:    rgba(255,255,255,0.08);
+      --border2:   rgba(255,255,255,0.14);
+      --orange:    #f97316;
+      --blue:      #3b82f6;
+      --green:     #10b981;
+      --purple:    #8b5cf6;
+      --text:      #e2e8f0;
+      --muted:     #94a3b8;
+      --dim:       #64748b;
+      --font:      'Outfit', sans-serif;
+      --serif:     'Playfair Display', serif;
+      --radius:    1.25rem;
+      --radius-sm: 0.875rem;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    button { font-family: var(--font); }
+
+    /* ============================================================
+       UTILITIES
+       ============================================================ */
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--orange) 0%, var(--blue) 55%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(59,130,246,0.1);
+      color: var(--blue);
+      border: 1px solid rgba(59,130,246,0.22);
+      margin-bottom: 1.25rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      font-family: var(--font);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--orange), var(--blue));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(59,130,246,0.4); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border2);
+    }
+    .btn-ghost:hover { background: var(--surface2); transform: translateY(-2px); }
+    .btn-green {
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.25);
+    }
+    .btn-green:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(37,211,102,0.4); }
+
+    .section { padding: 6rem 0; }
+    .section-alt { background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%); }
+
+    .section-header { text-align: center; margin-bottom: 4rem; }
+    .section-header h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+    .section-header p { color: var(--muted); font-size: 1.05rem; max-width: 580px; margin: 0 auto; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       NAVBAR
+       ============================================================ */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 1.25rem 0;
+      transition: all 0.35s ease;
+    }
+    .navbar.scrolled {
+      background: rgba(6,11,24,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 0;
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .nav-logo img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+
+    .nav-links { display: flex; align-items: center; gap: 1.75rem; list-style: none; }
+    .nav-links a { font-size: 0.875rem; color: var(--muted); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      background: linear-gradient(135deg, var(--orange), var(--blue));
+      color: #fff;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .nav-cta:hover { box-shadow: 0 4px 18px rgba(59,130,246,0.4); transform: translateY(-1px); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: rgba(6,11,24,0.98);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      padding: 1.5rem;
+      gap: 0;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      padding: 0.85rem 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .mobile-menu a:last-child { border-bottom: none; color: var(--text); font-weight: 600; padding-top: 1.25rem; }
+    .mobile-menu a:hover { color: var(--text); }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .hero-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0.06; }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 15% 50%, rgba(249,115,22,0.09) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 85% 25%, rgba(59,130,246,0.11) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 50% 100%, rgba(139,92,246,0.07) 0%, transparent 70%);
+    }
+    .hero-inner {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      width: 100%;
+    }
+    .hero-built-in {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .hero-built-in i { color: var(--orange); }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+    .hero-sub {
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1.75;
+      max-width: 460px;
+      margin-bottom: 2.25rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .hero-img-wrap { display: flex; justify-content: center; }
+    .hero-img-wrap img {
+      width: 100%;
+      max-width: 440px;
+      animation: floatY 6s ease-in-out infinite;
+      filter: drop-shadow(0 20px 50px rgba(59,130,246,0.18)) drop-shadow(0 0 80px rgba(249,115,22,0.08));
+    }
+
+    /* ============================================================
+       MARQUEE
+       ============================================================ */
+    .marquee-wrap {
+      padding: 1.5rem 0;
+      background: rgba(10,16,32,0.7);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .marquee-label {
+      text-align: center;
+      font-size: 0.68rem;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.75rem;
+    }
+    .marquee-track { display: flex; animation: marquee 30s linear infinite; }
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0 2.25rem;
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .marquee-item i { color: var(--blue); font-size: 0.7rem; }
+
+    /* ============================================================
+       TWO-COLUMN SECTIONS
+       ============================================================ */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+
+    .section-text h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.9rem, 3.5vw, 2.65rem);
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 1.15rem;
+    }
+    .section-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
+
+    .pill-highlight {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: var(--radius-sm);
+      background: rgba(16,185,129,0.07);
+      border: 1px solid rgba(16,185,129,0.2);
+      color: var(--green);
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+
+    .img-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .img-card img { width: 100%; transition: transform 0.5s ease; }
+    .img-card:hover img { transform: scale(1.03); }
+    .img-caption {
+      text-align: center;
+      padding: 0.65rem 1rem;
+      font-size: 0.78rem;
+      color: var(--dim);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ============================================================
+       AI ADVANTAGES
+       ============================================================ */
+    .adv-list { display: flex; flex-direction: column; gap: 1.15rem; }
+    .adv-card {
+      display: flex;
+      gap: 1.15rem;
+      align-items: flex-start;
+      padding: 1.4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: all 0.3s;
+    }
+    .adv-card:hover { border-color: rgba(59,130,246,0.3); transform: translateX(6px); box-shadow: 0 4px 24px rgba(59,130,246,0.08); }
+    .adv-icon {
+      width: 2.75rem; height: 2.75rem;
+      border-radius: 0.75rem;
+      background: rgba(59,130,246,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: var(--blue); flex-shrink: 0;
+    }
+    .adv-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .adv-desc { color: var(--muted); font-size: 0.86rem; line-height: 1.65; }
+
+    /* ============================================================
+       VISION
+       ============================================================ */
+    .vision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .vision-card {
+      padding: 2.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: all 0.35s;
+    }
+    .vision-card:hover { transform: translateY(-6px); border-color: var(--border2); box-shadow: 0 20px 50px rgba(0,0,0,0.25); }
+    .vision-icon {
+      width: 3.25rem; height: 3.25rem;
+      border-radius: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 1.5rem;
+    }
+    .vision-card h3 { font-family: var(--serif); font-size: 1.45rem; font-weight: 700; margin-bottom: 0.875rem; }
+    .vision-card p { color: var(--muted); line-height: 1.8; font-size: 0.95rem; }
+
+    /* ============================================================
+       MISSION
+       ============================================================ */
+    .mission-img-wrap {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .mission-img-wrap img { width: 100%; }
+    .mission-badge {
+      position: absolute;
+      bottom: 1.25rem; left: 50%; transform: translateX(-50%);
+      background: rgba(6,11,24,0.88);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border2);
+      border-radius: 0.875rem;
+      padding: 0.65rem 1.5rem;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .mission-badge .mbadge-top { font-size: 0.72rem; color: var(--green); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+    .mission-badge .mbadge-bot { font-size: 0.72rem; color: var(--muted); }
+
+    .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.75rem; }
+    .stat-box {
+      padding: 1.5rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    .stat-box:hover { border-color: var(--border2); }
+    .stat-box i { font-size: 1.4rem; margin-bottom: 0.65rem; display: block; }
+    .stat-box h4 { font-weight: 700; font-size: 0.92rem; margin-bottom: 0.2rem; }
+    .stat-box p { color: var(--dim); font-size: 0.76rem; }
+
+    /* ============================================================
+       SERVICES
+       ============================================================ */
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .service-card {
+      padding: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: all 0.35s;
+    }
+    .service-card:hover { transform: translateY(-7px); border-color: rgba(59,130,246,0.35); box-shadow: 0 16px 40px rgba(59,130,246,0.09); }
+    .service-icon {
+      width: 3.25rem; height: 3.25rem;
+      border-radius: 1rem;
+      background: rgba(59,130,246,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; color: var(--blue);
+      margin-bottom: 1.25rem;
+      transition: background 0.3s;
+    }
+    .service-card:hover .service-icon { background: rgba(59,130,246,0.18); }
+    .service-card h3 { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .service-card p { color: var(--muted); font-size: 0.875rem; line-height: 1.7; }
+
+    /* ============================================================
+       PRICING
+       ============================================================ */
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem; align-items: start;
+      max-width: 980px; margin: 0 auto;
+    }
+    .price-card {
+      padding: 2.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex; flex-direction: column;
+      position: relative;
+      transition: all 0.35s;
+    }
+    .price-card:hover { transform: translateY(-6px); border-color: var(--border2); }
+    .price-card.featured {
+      border-color: rgba(59,130,246,0.45);
+      background: rgba(59,130,246,0.03);
+      box-shadow: 0 0 0 1px rgba(59,130,246,0.12), 0 20px 60px rgba(59,130,246,0.12);
+      transform: scale(1.04);
+    }
+    .price-card.featured:hover { transform: scale(1.04) translateY(-6px); }
+    .popular-tag {
+      position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+      padding: 0.32rem 1.25rem;
+      border-radius: 0 0 0.75rem 0.75rem;
+      background: linear-gradient(135deg, var(--orange), var(--blue));
+      color: #fff; font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
+    }
+    .price-name { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; margin-bottom: 0.65rem; }
+    .price-amount {
+      font-size: 2.5rem; font-weight: 800; line-height: 1;
+      background: linear-gradient(135deg, var(--orange), var(--blue));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 0.25rem;
+    }
+    .price-suffix { color: var(--muted); font-size: 0.82rem; margin-bottom: 1.75rem; min-height: 1.25rem; }
+    .price-features { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 2rem; flex: 1; }
+    .price-features li { display: flex; align-items: center; gap: 0.7rem; font-size: 0.875rem; color: var(--muted); }
+    .price-features li i { color: var(--green); font-size: 0.72rem; flex-shrink: 0; }
+    .price-btn {
+      display: block; width: 100%; padding: 0.875rem;
+      border-radius: var(--radius-sm); text-align: center;
+      font-family: var(--font); font-weight: 600; font-size: 0.9rem;
+      cursor: pointer; border: none; transition: all 0.3s;
+    }
+    .price-btn-outline { border: 1px solid var(--border2); color: var(--text); background: transparent; }
+    .price-btn-outline:hover { background: var(--surface2); }
+    .price-btn-filled { background: linear-gradient(135deg, var(--orange), var(--blue)); color: #fff; }
+    .price-btn-filled:hover { box-shadow: 0 6px 22px rgba(59,130,246,0.4); transform: translateY(-1px); }
+
+    /* ============================================================
+       CONTACT
+       ============================================================ */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 2.5rem; max-width: 980px; margin: 0 auto; }
+    .contact-info { display: flex; flex-direction: column; gap: 1.15rem; }
+    .contact-tile {
+      display: flex; align-items: center; gap: 1.15rem;
+      padding: 1.4rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: inherit; transition: all 0.3s;
+    }
+    .contact-tile:hover { border-color: var(--border2); transform: translateY(-3px); }
+    .contact-icon {
+      width: 2.75rem; height: 2.75rem;
+      border-radius: 0.75rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .contact-lbl { font-size: 0.68rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+    .contact-val { font-weight: 600; font-size: 0.92rem; }
+
+    .form-box { padding: 2.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+    .form-group { margin-bottom: 1.1rem; }
+    .form-label { display: block; font-size: 0.8rem; color: var(--muted); font-weight: 500; margin-bottom: 0.45rem; }
+    .form-field {
+      width: 100%;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.825rem 1rem;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .form-field:focus { border-color: rgba(59,130,246,0.45); background: rgba(59,130,246,0.025); }
+    .form-field::placeholder { color: var(--dim); }
+    textarea.form-field { resize: none; min-height: 125px; }
+    .form-submit {
+      width: 100%; padding: 1rem;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--orange), var(--blue));
+      color: #fff; font-family: var(--font); font-weight: 600; font-size: 0.95rem;
+      border: none; cursor: pointer; transition: all 0.3s;
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    }
+    .form-submit:hover { box-shadow: 0 6px 22px rgba(59,130,246,0.4); transform: translateY(-1px); }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .footer { padding: 2.75rem 0; background: var(--bg2); border-top: 1px solid var(--border); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+    .footer-brand { font-family: var(--serif); font-size: 1.25rem; font-weight: 700; }
+    .footer-copy { color: var(--muted); font-size: 0.82rem; margin-top: 0.2rem; }
+    .footer-socials { display: flex; gap: 0.6rem; }
+    .social-btn {
+      width: 2.4rem; height: 2.4rem; border-radius: 50%;
+      background: var(--surface); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 0.95rem; transition: all 0.3s;
+    }
+    .social-btn:hover { color: var(--text); border-color: var(--border2); transform: translateY(-2px); }
+
+    /* ============================================================
+       CHATBOT
+       ============================================================ */
+    .chatbot-btn {
+      position: fixed; bottom: 1.5rem; left: 1.5rem; z-index: 900;
+      width: 3.4rem; height: 3.4rem; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      border: none; color: #fff; font-size: 1.2rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 18px rgba(59,130,246,0.4); transition: all 0.3s;
+    }
+    .chatbot-btn:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(59,130,246,0.5); }
+    .cb-dot {
+      position: absolute; top: 1px; right: 1px;
+      width: 11px; height: 11px; background: #ef4444; border-radius: 50%;
+    }
+    .cb-dot::before {
+      content: ''; position: absolute; inset: 0;
+      background: #ef4444; border-radius: 50%;
+      animation: dotPing 1.2s ease-in-out infinite;
+    }
+    .chatbot-panel {
+      position: fixed; bottom: 6rem; left: 1.5rem; z-index: 900;
+      width: 315px; background: #0d1526;
+      border: 1px solid var(--border2); border-radius: var(--radius);
+      overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); display: none;
+    }
+    .chatbot-panel.open { display: block; animation: slideUp 0.25s ease; }
+    .cb-header {
+      padding: 1rem 1.2rem;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .cb-avatar {
+      width: 2.4rem; height: 2.4rem; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: #fff;
+    }
+    .cb-name { font-weight: 600; font-size: 0.88rem; color: #fff; }
+    .cb-status { display: flex; align-items: center; gap: 0.35rem; font-size: 0.73rem; color: rgba(255,255,255,0.7); }
+    .cb-status-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: blink 2s ease-in-out infinite; }
+    .cb-body {
+      padding: 1rem; max-height: 260px; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 0.65rem;
+    }
+    .cb-body::-webkit-scrollbar { width: 4px; }
+    .cb-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+    .cb-msg {
+      max-width: 85%; padding: 0.7rem 0.9rem;
+      border-radius: 1rem; font-size: 0.83rem; line-height: 1.5;
+    }
+    .cb-msg.bot { background: rgba(255,255,255,0.06); color: var(--muted); border-radius: 0.25rem 1rem 1rem 1rem; }
+    .cb-msg.user { background: var(--blue); color: #fff; align-self: flex-end; border-radius: 1rem 0.25rem 1rem 1rem; }
+    .cb-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; padding: 0 1rem 1rem; }
+    .cb-opt {
+      padding: 0.5rem 0.65rem;
+      background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.22);
+      border-radius: 0.6rem; color: var(--blue); font-size: 0.76rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; text-align: left; font-family: var(--font);
+    }
+    .cb-opt:hover { background: rgba(59,130,246,0.18); }
+    .cb-wa-link {
+      margin: 0 1rem 1rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.55rem;
+      padding: 0.8rem; border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: #fff; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;
+    }
+    .cb-wa-link:hover { box-shadow: 0 4px 18px rgba(37,211,102,0.4); transform: translateY(-1px); }
+
+    /* ============================================================
+       FLOATING WHATSAPP FAB
+       ============================================================ */
+    .wa-fab {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 900;
+      width: 3.4rem; height: 3.4rem; border-radius: 50%;
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.5rem;
+      box-shadow: 0 4px 18px rgba(37,211,102,0.4);
+      animation: fabBounce 3s ease-in-out infinite;
+      transition: transform 0.2s;
+    }
+    .wa-fab:hover { animation: none; transform: scale(1.12); }
+
+    /* ============================================================
+       KEYFRAMES
+       ============================================================ */
+    @keyframes floatY   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+    @keyframes marquee  { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    @keyframes fabBounce{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes dotPing  { 0%{transform:scale(1);opacity:.8} 75%,100%{transform:scale(2.2);opacity:0} }
+    @keyframes blink    { 0%,100%{opacity:1} 50%{opacity:.45} }
+    @keyframes slideUp  { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1024px) {
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .pricing-grid  { grid-template-columns: 1fr; max-width: 400px; }
+      .price-card.featured { transform: none; }
+      .price-card.featured:hover { transform: translateY(-6px); }
+    }
+    @media (max-width: 768px) {
+      .section { padding: 4rem 0; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero-img-wrap { order: -1; }
+      .hero-img-wrap img { max-width: 260px; margin: 0 auto; }
+      .hero-sub { margin-left: auto; margin-right: auto; }
+      .hero-btns { justify-content: center; }
+      .two-col, .vision-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: center; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 2.3rem; }
+      .hero-btns { flex-direction: column; align-items: center; }
+      .stat-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#" class="nav-logo">
+          <img src="https://raw.githubusercontent.com/samyaindya-ux/vibecodeweb/main/images/new_site_logo_transparent.png" alt="VibeCodeWeb">
+          <span>VibeCode<span class="gradient-text">Web.in</span></span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#ai-benefits">AI Benefits</a></li>
+          <li><a href="#ai-advantages">AI Advantages</a></li>
+          <li><a href="#vision">Vision</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a href="https://wa.me/919477443425" target="_blank" rel="noopener" class="nav-cta">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#ai-benefits">AI Benefits</a>
+      <a href="#ai-advantages">AI Advantages</a>
+      <a href="#vision">Vision</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact">Contact</a>
+      <a href="https://wa.me/919477443425" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Chat on WhatsApp</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="https://raw.githubusercontent.com/samyaindya-ux/vibecodeweb/main/images/tech_mandala_bg.png" alt="" loading="eager">
+    </div>
+    <div class="container" style="width:100%">
+      <div class="hero-inner">
+        <div>
+          <div class="hero-built-in"><i class="fas fa-location-dot"></i> Proudly Built in India</div>
+          <h1>Next-Gen <span class="gradient-text">AI Solutions</span></h1>
+          <p class="hero-sub">Custom web development, smart automations, and strategic AI consulting—empower your business to compete and win on a global stage.</p>
+          <div class="hero-btns">
+            <a href="https://wa.me/919477443425" target="_blank" rel="noopener" class="btn btn-green">
+              <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+            </a>
+            <a href="#services" class="btn btn-ghost">Explore Services <i class="fas fa-arrow-down" style="font-size:.8em"></i></a>
+          </div>
+        </div>
+        <div class="hero-img-wrap">
+          <img src="https://raw.githubusercontent.com/samyaindya-ux/vibecodeweb/main/images/new_site_logo_transparent.png" alt="VibeCodeWeb" loading="eager">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <p class="marquee-label">Powered by Industry-Leading AI · Expertise in</p>
+    <div class="marquee-track" aria-hidden="true">
+      <span class="marquee-item"><i class="fas fa-microchip"></i>ChatGPT</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Claude</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Gemini</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Midjourney</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>GitHub Copilot</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Perplexity</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Pomelli by Google Labs</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Stitch</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>NotebookLM by Google Labs</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Llama 3</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>ChatGPT</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Claude</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Gemini</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Midjourney</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>GitHub Copilot</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Perplexity</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Pomelli by Google Labs</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Stitch</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>NotebookLM by Google Labs</span>
+      <span class="marquee-item"><i class="fas fa-microchip"></i>Llama 3</span>
+    </div>
+  </div>
+
+  <!-- AI BENEFITS -->
+  <section class="section" id="ai-benefits">
+    <div class="container">
+      <div class="two-col">
+        <div class="section-text reveal">
+          <span class="badge"><i class="fas fa-bolt"></i> The AI Revolution</span>
+          <h2>How AI Will Benefit <span class="gradient-text">Every Business</span></h2>
+          <p>Artificial Intelligence is no longer just for tech giants. It is a fundamental shift in how businesses operate, communicate, and scale. From local retail shops to massive enterprises, AI acts as an invisible force multiplier.</p>
+          <p>By integrating smart automations, businesses can dramatically reduce operational costs, eliminate human error in repetitive tasks, and unlock insights from data that were previously invisible. AI isn't here to replace your business — it's here to make it <strong>unstoppable</strong>.</p>
+          <div class="pill-highlight"><i class="fas fa-arrow-trend-up"></i> 10x Growth Potential with Smart Workflows</div>
+        </div>
+        <div class="reveal">
+          <div class="img-card">
+            <img src="https://raw.githubusercontent.com/samyaindya-ux/vibecodeweb/main/images/ai_business_benefit.png" alt="Future-Proof Your Business" loading="lazy">
+            <div class="img-caption">Future-Proof Your Business</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI ADVANTAGES -->
+  <section class="section section-alt" id="ai-advantages">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge"><i class="fas fa-lightbulb"></i> Core Advantages</span>
+        <h2>Unfair Advantages of <span class="gradient-text">Using AI</span></h2>
+      </div>
+      <div class="two-col">
+        <div class="adv-list">
+          <div class="adv-card reveal">
+            <div class="adv-icon"><i class="fas fa-clock"></i></div>
+            <div>
+              <div class="adv-title">24/7 Operational Efficiency</div>
+              <div class="adv-desc">AI never sleeps. Automated customer service, lead generation, and data processing run around the clock without extra overhead.</div>
+            </div>
+          </div>
+          <div class="adv-card reveal">
+            <div class="adv-icon" style="background:rgba(249,115,22,.1);color:var(--orange)"><i class="fas fa-bullseye"></i></div>
+            <div>
+              <div class="adv-title">Hyper-Personalization</div>
+              <div class="adv-desc">Deliver uniquely tailored experiences, product recommendations, and marketing to every single customer automatically.</div>
+            </div>
+          </div>
+          <div class="adv-card reveal">
+            <div class="adv-icon" style="background:rgba(16,185,129,.1);color:var(--green)"><i class="fas fa-wallet"></i></div>
+            <div>
+              <div class="adv-title">Massive Cost Reduction</div>
+              <div class="adv-desc">Reduce manual labor hours on repetitive tasks by up to 80%, allowing your team to focus on high-value creative and strategic work.</div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="img-card">
+            <img src="https://raw.githubusercontent.com/samyaindya-ux/vibecodeweb/main/images/ai_advantages_dashboard.png" alt="Data-Driven Precision" loading="lazy">
+            <div class="img-caption">Data-Driven Precision</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISION -->
+  <section class="section" id="vision">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge"><i class="fas fa-rocket"></i> Vision &amp; Advantage</span>
+        <h2>Taking India Forward <span class="gradient-text">with AI</span></h2>
+      </div>
+      <div class="vision-grid">
+        <div class="vision-card reveal">
+          <div class="vision-icon" style="background:rgba(249,115,22,.12);color:var(--orange)"><i class="fas fa-dharmachakra"></i></div>
+          <h3>Our Goal</h3>
+          <p>To empower local businesses, startups, and enterprises across India by democratizing access to cutting-edge AI technologies. We believe that by integrating smart automations and next-gen web solutions, we can elevate Indian businesses to compete—and win—on a global stage. We are committed to building digital infrastructure that is revolutionary, taking India forward in the global tech landscape.</p>
+        </div>
+        <div class="vision-card reveal">
+          <div class="vision-icon" style="background:rgba(59,130,246,.12);color:var(--blue)"><i class="fas fa-shield-halved"></i></div>
+          <h3>Our Moat</h3>
+          <p>Our unfair advantage lies in the mastery of industry-leading AI tools like ChatGPT, Claude, and Gemini. By heavily utilizing AI in our workflow, we dramatically reduce development time and costs. This means we can deliver complex, hyper-optimized, and highly scalable solutions faster and more affordably than traditional agencies. Our tech stack is leaner, smarter, and strictly focused on ROI.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section class="section section-alt" id="about">
+    <div class="container">
+      <div class="two-col">
+        <div class="mission-img-wrap reveal">
+          <img src="https://raw.githubusercontent.com/samyaindya-ux/vibecodeweb/main/images/founder_portrait.png" alt="Founder" loading="lazy">
+          <div class="mission-badge">
+            <p class="mbadge-top">AI-Powered Growth</p>
+            <p class="mbadge-bot">Scaling Businesses Globally</p>
+          </div>
+        </div>
+        <div class="section-text reveal">
+          <span class="badge"><i class="fas fa-chart-line"></i> Our Mission</span>
+          <h2>Elevating Businesses, <span class="gradient-text">Setting New Benchmarks</span></h2>
+          <p>By blending global best practices with cutting-edge AI technologies, we empower businesses of all sizes—from ambitious startups to large enterprises—to reach and exceed their industry benchmarks.</p>
+          <p>Whether it's a breathtaking landing page or a complex AI-driven workflow, our intelligent solutions are designed to scale your success.</p>
+          <div class="stat-row">
+            <div class="stat-box"><i class="fas fa-bolt" style="color:var(--orange)"></i><h4>Fast Delivery</h4><p>Streamlined agile workflows</p></div>
+            <div class="stat-box"><i class="fas fa-brain" style="color:var(--blue)"></i><h4>AI Integrated</h4><p>Powered by the latest LLMs</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge"><i class="fas fa-network-wired"></i> Capabilities</span>
+        <h2>Solutions Designed <span class="gradient-text">to Scale</span></h2>
+      </div>
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <div class="service-icon"><i class="fas fa-cash-register"></i></div>
+          <h3>Retails &amp; POS System</h3>
+          <p>Providing smart, efficient, and reliable Point of Sale and retail management solutions for your business.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon" style="background:rgba(249,115,22,.1);color:var(--orange)"><i class="fas fa-robot"></i></div>
+          <h3>AI Automations</h3>
+          <p>Streamlining workflows and scaling operations using cutting-edge AI technologies and custom tool integrations.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon" style="background:rgba(16,185,129,.1);color:var(--green)"><i class="fas fa-file-lines"></i></div>
+          <h3>Document Analyzer</h3>
+          <p>Extracting actionable insights, summarizing complex data, and organizing unstructured documents using advanced AI models.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon" style="background:rgba(139,92,246,.1);color:var(--purple)"><i class="fas fa-cloud"></i></div>
+          <h3>SaaS Development</h3>
+          <p>Developing scalable, cloud-based Software as a Service products with seamless user experiences and robust backends.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon" style="background:rgba(249,115,22,.1);color:var(--orange)"><i class="fas fa-pen-nib"></i></div>
+          <h3>Niche Content Generator</h3>
+          <p>Automating the creation of highly specialized, engaging content tailored to your unique audience and brand voice.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><i class="fas fa-microchip"></i></div>
+          <h3>AI Strategy &amp; Consulting</h3>
+          <p>Providing expert guidance on adopting AI strategies tailored for your business to outpace the competition.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section section-alt" id="pricing">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge"><i class="fas fa-tags"></i> Investment</span>
+        <h2>Simple, Transparent <span class="gradient-text">Pricing</span></h2>
+        <p>Get world-class AI and Web solutions tailored for your business without the enterprise price tag.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card reveal">
+          <div class="price-name">Starter Web</div>
+          <div class="price-amount">₹5,000</div>
+          <div class="price-suffix">onwards</div>
+          <ul class="price-features">
+            <li><i class="fas fa-check"></i> Custom Landing Page</li>
+            <li><i class="fas fa-check"></i> Mobile Responsive</li>
+            <li><i class="fas fa-check"></i> Contact Form</li>
+            <li><i class="fas fa-check"></i> Basic SEO</li>
+          </ul>
+          <a href="https://wa.me/919477443425?text=Hi%2C%20I%20am%20interested%20in%20the%20Starter%20Web%20plan." target="_blank" class="price-btn price-btn-outline">Get Started</a>
+        </div>
+        <div class="price-card featured reveal">
+          <div class="popular-tag">Most Popular</div>
+          <div class="price-name">Pro AI Business</div>
+          <div class="price-amount">₹10,000</div>
+          <div class="price-suffix">onwards</div>
+          <ul class="price-features">
+            <li><i class="fas fa-check"></i> Complete Website Setup</li>
+            <li><i class="fas fa-check"></i> AI Chatbot Integration</li>
+            <li><i class="fas fa-check"></i> Retails &amp; POS System</li>
+            <li><i class="fas fa-check"></i> Advanced SEO</li>
+            <li><i class="fas fa-check"></i> Free Domain (1yr)</li>
+          </ul>
+          <a href="https://wa.me/919477443425?text=Hi%2C%20I%20am%20interested%20in%20the%20Pro%20AI%20Business%20plan." target="_blank" class="price-btn price-btn-filled">Go Pro</a>
+        </div>
+        <div class="price-card reveal">
+          <div class="price-name">Custom App</div>
+          <div class="price-amount" style="font-size:1.9rem">Let's Talk</div>
+          <div class="price-suffix">&nbsp;</div>
+          <ul class="price-features">
+            <li><i class="fas fa-check"></i> Complex Web Apps</li>
+            <li><i class="fas fa-check"></i> Custom AI Models</li>
+            <li><i class="fas fa-check"></i> E-Commerce Solutions</li>
+            <li><i class="fas fa-check"></i> Dedicated Support</li>
+          </ul>
+          <a href="https://wa.me/919477443425?text=Hi%2C%20I%20would%20like%20to%20discuss%20a%20Custom%20App." target="_blank" class="price-btn price-btn-outline">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge"><i class="fas fa-envelope"></i> Let's Connect</span>
+        <h2>Ready to Scale <span class="gradient-text">Your Business?</span></h2>
+        <p>Whether you need a cutting-edge POS system, AI automations, or a custom web solution, we are here to help.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info reveal">
+          <a href="https://wa.me/919477443425" target="_blank" rel="noopener" class="contact-tile">
+            <div class="contact-icon" style="background:rgba(16,185,129,.12);color:var(--green)"><i class="fab fa-whatsapp"></i></div>
+            <div><div class="contact-lbl">WhatsApp / Phone</div><div class="contact-val">+91 9477443425</div></div>
+          </a>
+          <a href="mailto:samya.indya@gmail.com" class="contact-tile">
+            <div class="contact-icon" style="background:rgba(59,130,246,.12);color:var(--blue)"><i class="fas fa-envelope"></i></div>
+            <div><div class="contact-lbl">Email</div><div class="contact-val">samya.indya@gmail.com</div></div>
+          </a>
+        </div>
+        <form class="form-box reveal" action="https://formsubmit.co/samya.indya@gmail.com" method="POST">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_subject" value="New message from VibeCodeWeb">
+          <div class="form-group">
+            <label for="fname" class="form-label">Your Name</label>
+            <input type="text" id="fname" name="name" class="form-field" placeholder="Enter your name" required>
+          </div>
+          <div class="form-group">
+            <label for="femail" class="form-label">Your Email</label>
+            <input type="email" id="femail" name="email" class="form-field" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label for="fmsg" class="form-label">Your Message</label>
+            <textarea id="fmsg" name="message" class="form-field" placeholder="Tell us about your project..." required></textarea>
+          </div>
+          <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-brand">VibeCode<span class="gradient-text">Web.in</span></div>
+          <div class="footer-copy">© <span id="yr"></span> VibeCodeWeb.in · Proudly built in India</div>
+        </div>
+        <div class="footer-socials">
+          <a href="mailto:samya.indya@gmail.com" class="social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+          <a href="https://wa.me/919477443425" target="_blank" rel="noopener" class="social-btn" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CHATBOT -->
+  <button class="chatbot-btn" id="cbToggle" aria-label="Open AI chat">
+    <i class="fas fa-message" id="cbIcon"></i>
+    <span class="cb-dot" id="cbDot"></span>
+  </button>
+  <div class="chatbot-panel" id="cbPanel">
+    <div class="cb-header">
+      <div class="cb-avatar"><i class="fas fa-robot"></i></div>
+      <div>
+        <div class="cb-name">VibeCodeWeb AI</div>
+        <div class="cb-status"><span class="cb-status-dot"></span> Online</div>
+      </div>
+    </div>
+    <div class="cb-body" id="cbBody">
+      <div class="cb-msg bot">Namaste! 🙏 I'm the VibeCodeWeb AI assistant. Select a service you're interested in:</div>
+    </div>
+    <div class="cb-options" id="cbOpts">
+      <button class="cb-opt" onclick="cbSelect('Retail & POS')">Retail &amp; POS</button>
+      <button class="cb-opt" onclick="cbSelect('AI Automations')">AI Automations</button>
+      <button class="cb-opt" onclick="cbSelect('Doc Analyzer')">Doc Analyzer</button>
+      <button class="cb-opt" onclick="cbSelect('SaaS')">SaaS</button>
+      <button class="cb-opt" onclick="cbSelect('Content Gen')">Content Gen</button>
+      <button class="cb-opt" onclick="cbSelect('AI Strategy')">AI Strategy</button>
+    </div>
+  </div>
+
+  <!-- FLOATING WHATSAPP -->
+  <a href="https://wa.me/919477443425" target="_blank" rel="noopener" class="wa-fab" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Sticky nav
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60), { passive: true });
+
+    // Mobile menu
+    const ham = document.getElementById('hamburger');
+    const mob = document.getElementById('mobileMenu');
+    ham.addEventListener('click', () => { ham.classList.toggle('active'); mob.classList.toggle('open'); });
+    mob.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { ham.classList.remove('active'); mob.classList.remove('open'); }));
+
+    // Scroll reveal
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 70);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // Chatbot
+    const cbToggle = document.getElementById('cbToggle');
+    const cbPanel  = document.getElementById('cbPanel');
+    const cbIcon   = document.getElementById('cbIcon');
+    const cbDot    = document.getElementById('cbDot');
+    const cbBody   = document.getElementById('cbBody');
+    const cbOpts   = document.getElementById('cbOpts');
+    let open = false;
+
+    cbToggle.addEventListener('click', () => {
+      open = !open;
+      cbPanel.classList.toggle('open', open);
+      cbIcon.className = open ? 'fas fa-xmark' : 'fas fa-message';
+      cbDot.style.display = open ? 'none' : '';
+    });
+
+    function cbSelect(svc) {
+      const u = document.createElement('div'); u.className = 'cb-msg user'; u.textContent = svc; cbBody.appendChild(u);
+      const b = document.createElement('div'); b.className = 'cb-msg bot'; b.textContent = `Great! Click below to chat about ${svc} on WhatsApp.`; cbBody.appendChild(b);
+      cbOpts.style.display = 'none';
+      const wa = document.createElement('a');
+      wa.href = `https://wa.me/919477443425?text=Hi%2C%20I%20am%20interested%20in%20your%20${encodeURIComponent(svc)}%20service.`;
+      wa.target = '_blank'; wa.className = 'cb-wa-link';
+      wa.innerHTML = '<i class="fab fa-whatsapp"></i> Chat on WhatsApp';
+      cbPanel.appendChild(wa);
+      cbBody.scrollTop = cbBody.scrollHeight;
+    }
+  </script>
+</body>
+</html>
