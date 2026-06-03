@@ -1,0 +1,32 @@
+name: Deploy to GlobeHost via FTP
+
+on:
+  push:
+    branches: [ main ]      # auto-deploys on every push to main (including from mobile)
+  workflow_dispatch:         # adds a "Run workflow" button in GitHub mobile app
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /public_html/
+          # Exclude dev/utility files — only ship the actual website
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            *.py
+            *.ps1
+            *.vbs
+            *.bat
+            *.txt
+            *.md
