@@ -33,7 +33,7 @@ export default function Hero() {
         <div className="text-center md:text-left">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1e293b]/60 border border-[#334155]/50 text-[#cbd5e1] text-sm mb-8">
             <i className="fas fa-location-dot text-[#f97316]" />
-            Proudly Built in India
+            Proudly Built in Indiaa
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold font-serif leading-tight mb-6">
