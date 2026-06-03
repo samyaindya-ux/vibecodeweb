@@ -3,7 +3,7 @@ name: Deploy to GlobeHost via FTP
 on:
   push:
     branches: [ main ]      # auto-deploys on every push to main (including from mobile)
-  workflow_dispatch:         # adds a "Run workflow" button in GitHub mobile app
+  workflow_dispatch:         # adds a "Run workflow" button in the GitHub mobile app
 
 jobs:
   deploy:
@@ -12,21 +12,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
       - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /public_html/
-          # Exclude dev/utility files — only ship the actual website
-          exclude: |
-            **/.git*
-            **/.git*/**
-            .github/**
-            *.py
-            *.ps1
-            *.vbs
-            *.bat
-            *.txt
-            *.md
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USERNAME }}
+          FTP_PASS: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          lftp -c "
+            set ftp:ssl-allow no;
+            set net:timeout 30;
+            set net:max-retries 3;
+            open -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_HOST\";
+            mirror --reverse --delete --verbose \
+              --exclude-glob .git \
+              --exclude-glob .git/ \
+              --exclude-glob .github/ \
+              --exclude-glob '*.py' \
+              --exclude-glob '*.ps1' \
+              --exclude-glob '*.vbs' \
+              --exclude-glob '*.bat' \
+              . /public_html/;
+          "
