@@ -1,0 +1,10 @@
+# vibecodeweb .gitignore
+# Simple static site — tracking everything including images (only 12MB).
+
+# OS / editor noise
+Thumbs.db
+.DS_Store
+*.swp
+desktop.ini
+__pycache__/
+*.pyc
