@@ -22,7 +22,9 @@ jobs:
           FTP_PASS: ${{ secrets.FTP_PASSWORD }}
         run: |
           lftp -c "
-            set ftp:ssl-allow no;
+            set ssl:verify-certificate no;
+            set ftp:ssl-auth TLS;
+            set ftp:ssl-protect-data yes;
             set net:timeout 30;
             set net:max-retries 3;
             open -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_HOST\";
