@@ -9,17 +9,23 @@
  * Nothing is ever published until you Approve it here.
  */
 
+require __DIR__ . '/auth.php';
+if (empty($_SESSION['uid'])) { header('Location: login.php'); exit; }
 require __DIR__ . '/lib/queue.php';
+require __DIR__ . '/lib/db.php';
 
-$config = file_exists(__DIR__ . '/config.php')
-    ? require __DIR__ . '/config.php'
-    : ['queue_path' => __DIR__ . '/queue.json', 'timezone' => 'Asia/Kolkata'];
+if (!file_exists(__DIR__ . '/config.php')) {
+    http_response_code(500);
+    exit('Missing config.php — fill in credentials (including db_*) first.');
+}
+$config = require __DIR__ . '/config.php';
 
 date_default_timezone_set($config['timezone'] ?? 'Asia/Kolkata');
-$queue = new Queue($config['queue_path']);
+$queue = new Queue(vcw_db($config));
 
 // ---- handle actions ---------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    vcw_csrf_check();
     $id     = $_POST['id'] ?? '';
     $action = $_POST['action'] ?? '';
     if ($id && $action === 'approve') {
@@ -88,7 +94,11 @@ $assetsRel = '../ig-assets/'; // served from localhost/vibecodeweb/
 <header>
   <h1>📸 VibeCodeWeb — Instagram Review</h1>
   <div class="sub">Approve posts to queue them for publishing · @vibecodeweb.in</div>
-  <a href="create.php" style="margin-top:8px;display:inline-block;background:#10b981;color:#022;border-radius:999px;padding:9px 20px;font-weight:700;font-size:13px;text-decoration:none;">✏️ New Post</a>
+  <div style="margin-top:8px;display:flex;gap:10px;flex-wrap:wrap;">
+    <a href="create.php" style="display:inline-block;background:#10b981;color:#022;border-radius:999px;padding:9px 20px;font-weight:700;font-size:13px;text-decoration:none;">✏️ New Post</a>
+    <a href="users.php" style="display:inline-block;color:#94a3b8;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:9px 18px;font-size:13px;text-decoration:none;">👥 Users</a>
+    <a href="logout.php" style="display:inline-block;color:#94a3b8;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:9px 18px;font-size:13px;text-decoration:none;">Log out (<?= htmlspecialchars($_SESSION['uname'] ?? '') ?>)</a>
+  </div>
 </header>
 <div class="wrap">
   <div class="stats">
@@ -121,6 +131,7 @@ $assetsRel = '../ig-assets/'; // served from localhost/vibecodeweb/
         <div style="margin-top:10px;"><span class="badge"><?= htmlspecialchars($p['type'] ?? 'image') ?></span></div>
       </div>
       <form method="post">
+        <?= vcw_csrf_field() ?>
         <input type="hidden" name="id" value="<?= htmlspecialchars($p['id']) ?>">
         <label>Caption</label>
         <textarea name="caption"><?= htmlspecialchars($p['caption'] ?? '') ?></textarea>

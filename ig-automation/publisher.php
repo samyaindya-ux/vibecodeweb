@@ -14,6 +14,7 @@
 
 require __DIR__ . '/lib/graph.php';
 require __DIR__ . '/lib/queue.php';
+require __DIR__ . '/lib/db.php';
 
 $configPath = __DIR__ . '/config.php';
 if (!file_exists($configPath)) {
@@ -40,7 +41,7 @@ function logline(string $logFile, string $msg): void
     file_put_contents($logFile, $line . "\n", FILE_APPEND);
 }
 
-$queue = new Queue($config['queue_path']);
+$queue = new Queue(vcw_db($config));
 $now   = time();
 
 $due = array_filter($queue->byStatus('approved'), function ($item) use ($now) {

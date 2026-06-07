@@ -1,4 +1,8 @@
-AuthType Basic
-AuthName "VibeCodeWeb"
-AuthUserFile /home1/vibec/public_html/ig-automation/.htpasswd
-Require valid-user
+# Login is now handled by login.php (PHP session). Basic Auth removed.
+# Deny direct web access to secrets and internals.
+<FilesMatch "(^\.ht|config(\.sample)?\.php$|\.log$|\.sql$|\.json$)">
+  Require all denied
+</FilesMatch>
+
+# The lib/ directory is blocked by its own lib/.htaccess (Require all denied),
+# which works regardless of the URL path prefix.

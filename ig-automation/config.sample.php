@@ -24,6 +24,13 @@ return [
     // Graph API version pinned for stability.
     'graph_version'       => 'v21.0',
 
+    // ---- Database (posts + login) --------------------------------------------
+    // On GlobeHost these use the cPanel-prefixed names (e.g. vibec_igauto).
+    'db_host'             => 'localhost',
+    'db_name'             => 'vibec_igauto',
+    'db_user'             => 'vibec_iguser',
+    'db_pass'             => 'CHANGE_ME',
+
     // ---- Asset hosting -------------------------------------------------------
     // Public base URL where generated post images are reachable (required by the
     // Graph API — it fetches image_url over the public internet).

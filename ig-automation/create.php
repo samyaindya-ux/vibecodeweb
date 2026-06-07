@@ -6,12 +6,17 @@
  * https://vibecodeweb.in/ig-automation/create.php
  */
 
+require __DIR__ . '/auth.php';
+if (empty($_SESSION['uid'])) { header('Location: login.php'); exit; }
 require __DIR__ . '/lib/queue.php';
+require __DIR__ . '/lib/db.php';
 require __DIR__ . '/assets-generator/generate.php';
 
-$config = file_exists(__DIR__ . '/config.php')
-    ? require __DIR__ . '/config.php'
-    : ['queue_path' => __DIR__ . '/queue.json', 'timezone' => 'Asia/Kolkata'];
+if (!file_exists(__DIR__ . '/config.php')) {
+    http_response_code(500);
+    exit('Missing config.php — fill in credentials (including db_*) first.');
+}
+$config = require __DIR__ . '/config.php';
 
 date_default_timezone_set($config['timezone'] ?? 'Asia/Kolkata');
 
@@ -25,6 +30,7 @@ $error   = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    vcw_csrf_check();
     $headline  = trim($_POST['headline']  ?? '');
     $sub       = trim($_POST['sub']       ?? '');
     $caption   = trim($_POST['caption']   ?? '');
@@ -43,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Caption is required — it goes in the Instagram post.';
     } else {
         // Auto-generate next ID.
-        $queue   = new Queue($config['queue_path']);
+        $queue   = new Queue(vcw_db($config));
         $all     = $queue->all();
         $maxNum  = 0;
         foreach ($all as $item) {
@@ -146,6 +152,7 @@ $defaultSchedule = date('Y-m-d\TH:i', strtotime('tomorrow 10:30'));
 <header>
   <h1>✏️ New Post</h1>
   <a class="back" href="review.php">← Review dashboard</a>
+  <a class="back" href="logout.php">Log out (<?= htmlspecialchars($_SESSION['uname'] ?? '') ?>)</a>
 </header>
 <div class="wrap">
 
@@ -154,6 +161,7 @@ $defaultSchedule = date('Y-m-d\TH:i', strtotime('tomorrow 10:30'));
 <?php endif; ?>
 
 <form method="post" id="form">
+  <?= vcw_csrf_field() ?>
 
   <div class="field">
     <label>Headline <span style="color:#fca5a5">*</span></label>

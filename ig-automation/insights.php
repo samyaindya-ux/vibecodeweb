@@ -10,6 +10,7 @@
 
 require __DIR__ . '/lib/graph.php';
 require __DIR__ . '/lib/queue.php';
+require __DIR__ . '/lib/db.php';
 
 $configPath = __DIR__ . '/config.php';
 if (!file_exists($configPath)) {
@@ -35,7 +36,7 @@ try {
     }
 
     // Per-post insights for items we published.
-    $queue = new Queue($config['queue_path']);
+    $queue = new Queue(vcw_db($config));
     $postMetrics = [];
     foreach ($queue->byStatus('published') as $item) {
         if (empty($item['media_id'])) continue;

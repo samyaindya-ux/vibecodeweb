@@ -13,11 +13,14 @@
  */
 
 require __DIR__ . '/lib/queue.php';
+require __DIR__ . '/lib/db.php';
 require __DIR__ . '/assets-generator/generate.php';
 
-$config = file_exists(__DIR__ . '/config.php')
-    ? require __DIR__ . '/config.php'
-    : ['queue_path' => __DIR__ . '/queue.json', 'timezone' => 'Asia/Kolkata'];
+if (!file_exists(__DIR__ . '/config.php')) {
+    fwrite(STDERR, "Missing config.php — fill in credentials (including db_*) first.\n");
+    exit(1);
+}
+$config = require __DIR__ . '/config.php';
 date_default_timezone_set($config['timezone'] ?? 'Asia/Kolkata');
 
 // Rotating hashtag blocks (Set A/B/C from the kit).
@@ -77,7 +80,7 @@ $POSTS = [
 ];
 
 $onlyImages = in_array('--images', $argv ?? [], true);
-$queue = new Queue($config['queue_path']);
+$queue = new Queue(vcw_db($config));
 $existing = array_column($queue->all(), null, 'id');
 $items = $queue->all();
 
