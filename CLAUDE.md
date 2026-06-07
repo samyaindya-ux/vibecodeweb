@@ -108,29 +108,49 @@ ig-assets/                ← generated PNGs (committed, must be public on Globe
 - **System user**: vibecodeweb-publisher (ID: `61589583827535`) · never-expiring token
 - **Business portfolio**: Vibecodeweb.in (ID: `1006474768411908`)
 
-### Workflow
-1. `seed_content.php` populates `queue.json` with `pending_review` items + generates images
-2. Samya approves posts at `http://localhost/vibecodeweb/ig-automation/review.php`
-3. `publisher.php` (cron, hourly) picks up `approved` + due items and publishes via Graph API
-4. `insights.php` (cron, weekly) pulls metrics and writes `logs/insights-YYYY-MM-DD.json`
+### GlobeHost production server
+| Detail | Value |
+|---|---|
+| Server path | `/home1/vibec/public_html/ig-automation/` |
+| PHP binary | `/usr/local/bin/php` |
+| Review dashboard | `https://vibecodeweb.in/ig-automation/review.php` (Basic Auth: user `rehansh`) |
+| config.php on server | `dry_run = false` — server always publishes live |
+| `.htpasswd` | gitignored — on server only, never commit |
 
-### Commands
+### Cron jobs (GlobeHost cPanel — active)
+| Job | Schedule | Command |
+|---|---|---|
+| Publisher | Hourly (`0 * * * *`) | `/usr/local/bin/php /home1/vibec/public_html/ig-automation/publisher.php >> .../logs/cron.log 2>&1` |
+| Insights | Sunday 3:30 UTC (`30 3 * * 0`) | `/usr/local/bin/php /home1/vibec/public_html/ig-automation/insights.php >> .../logs/cron.log 2>&1` |
+
+### Workflow (how to post)
+1. Open `https://vibecodeweb.in/ig-automation/review.php` → login `rehansh`
+2. Approve a post → status flips to `approved`
+3. Hourly cron publishes it automatically — no further action needed
+
+### Local commands (XAMPP — dry_run=true, safe)
 ```bash
 # Verify API connection
 I:\xampp\php\php.exe ig-automation/insights.php
 
-# Dry-run publisher (safe — no live posts)
+# Dry-run publisher (no live posts)
 I:\xampp\php\php.exe ig-automation/publisher.php
 
-# Regenerate all post images
+# Regenerate all post images after brand/handle changes
 I:\xampp\php\php.exe ig-automation/seed_content.php --images
 ```
 
 ### Rules
-- `config.php` is gitignored — **never commit it**
-- `dry_run = true` by default — flip to `false` only for an explicit live test, then flip back
+- `config.php` and `.htpasswd` are gitignored — **never commit either**
+- Local = `dry_run = true`; GlobeHost = `dry_run = false`
 - No follow/unfollow/mass-DM automation — Instagram ToS violation
+- After regenerating images locally → push to git → re-upload `ig-assets/` to GlobeHost
 
-### Pending (2026-06-07)
-- Set up GlobeHost hourly cron for `publisher.php` and weekly for `insights.php`
-- Upload `ig-assets/` to GlobeHost production so image URLs are publicly reachable
+### Status (2026-06-07) — FULLY LIVE ✅
+- ✅ Meta app + system user + never-expiring token
+- ✅ Instagram @vibecodeweb.in connected to Facebook Page
+- ✅ 14 posts queued, all images at `@vibecodeweb.in`
+- ✅ ig-assets live at `https://vibecodeweb.in/ig-assets/`
+- ✅ Publisher + Insights crons active on GlobeHost
+- ✅ API verified from GlobeHost: `@vibecodeweb.in · 1 follower`
+- ✅ Review dashboard password-protected (user: `rehansh`)
