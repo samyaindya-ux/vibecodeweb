@@ -11,6 +11,7 @@ __pycache__/
 
 # Instagram automation — secrets & runtime artifacts (NEVER commit these)
 ig-automation/config.php
+ig-automation/.htpasswd
 ig-automation/logs/
 ig-automation/*.token
 ig-automation/token.json

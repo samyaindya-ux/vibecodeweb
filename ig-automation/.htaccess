@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "VibeCodeWeb"
+AuthUserFile /home1/vibec/public_html/ig-automation/.htpasswd
+Require valid-user
