@@ -19,6 +19,7 @@ The Python and PowerShell scripts in the repo root are one-shot image utilities.
 |---|---|
 | `crop.py` / `crop.ps1` | Slices `images/5logo.jpg` into a 3×2 grid → `images/logo_0.jpg` through `logo_5.jpg` |
 | `make_transparent.py` / `transparent.ps1` | Creates `images/new_site_logo_transparent.png` from `images/new_site_logo.png` by promoting the brightest channel to alpha |
+| `temp_crop.ps1` | Scratch variant of the crop script — not canonical |
 
 Requirements: `pip install Pillow` for the Python scripts; `System.Drawing` assembly (Windows) for the PowerShell scripts.
 
@@ -28,17 +29,39 @@ Requirements: `pip install Pillow` for the Python scripts; `System.Drawing` asse
 
 The repo contains two self-contained pages that share no code:
 
-- **`index.html`** (~80 KB) — the primary production page. Elaborate dark-theme design using Outfit + Playfair Display fonts and FontAwesome icons. Sections: hero, services, client logo carousel (auto-scrolling), testimonials, blog teasers, contact modal. Includes a JS-powered dark/light mode toggle.
-- **`index2.html`** (~30 KB) — a newer, cleaner redesign using Material Design 3 color tokens and Google Material Symbols icons. Hero images are served from Google's CDN (`lh3.googleusercontent.com`) rather than `images/`. Hardcodes `<html class="dark">` with no toggle.
+- **`index.html`** (1321 lines) — the primary production page. Elaborate dark-theme design using Outfit + Playfair Display fonts and FontAwesome icons. Has a JS-powered dark/light mode toggle (`darkMode: 'class'`).
+- **`index2.html`** (469 lines) — a newer, cleaner redesign using Material Design 3 color tokens and Google Material Symbols icons. Hero images are served from Google's CDN (`lh3.googleusercontent.com`) rather than `images/`. Hardcodes `<html class="dark">` with no toggle.
 
 Neither page imports the other or shares assets.
+
+### `index.html` section map
+
+Use these IDs and line numbers to navigate the 1321-line file:
+
+| Line | ID / landmark | Content |
+|------|--------------|---------|
+| 162 | navbar | Top nav with mobile hamburger |
+| 205 | — | Mobile dropdown menu |
+| 235 | `#hero` | Hero with mandala background, rotating logo |
+| 301 | — | AI expertise marquee banner |
+| 384 | `#ai-benefits` | AI benefit section (image + text) |
+| 438 | `#ai-advantages` | AI advantages section (text + dashboard image) |
+| 507 | `#vision` | Goal & moat / vision section |
+| 568 | `#about` | Mission section with founder portrait |
+| 628 | `#services` | Six service cards |
+| 731 | `#pricing` | Three pricing plans (Starter / Pro AI / Custom) |
+| 826 | `#contact` | Contact info + inline contact form |
+| 919 | `#footer` | Footer with email + WhatsApp links |
+| 1064 | `<script>` | All page JS (nav, dark mode, carousel, scroll-reveal, modal) |
+
+The contact section (`#contact`) contains both direct contact info (WhatsApp `wa.me/919477443425`, email `samya.indya@gmail.com`) and a form modal — no backend; form submission opens WhatsApp.
 
 ### Tailwind CSS via CDN — no local build
 
 Both pages load Tailwind from `https://cdn.tailwindcss.com`. There is no `package.json`, no Tailwind CLI, and no PostCSS pipeline. Tailwind configuration (custom colors, font families, spacing tokens) lives in an inline `<script>` block near the top of each HTML file.
 
 The two pages use **completely different color token sets**:
-- `index.html` — tokens like `brand-dark`, `neon-blue`, `cyber-purple`, with `darkMode: 'class'`
+- `index.html` — tokens like `brand-dark`, `brand-primary`, `brand-accent`, `brand-neon`, `brand-saffron`, `brand-indiaGreen`
 - `index2.html` — Material Design 3-style semantic tokens (`surface`, `on-surface`, `primary-container`, `electric-purple`, `neon-green`, etc.)
 
 When editing colors or adding new Tailwind utilities, update the `tailwind.config` block inside the specific file being changed — changes to one file's config do not affect the other.
@@ -54,3 +77,60 @@ All JS is inline at the bottom of each HTML file inside `<script>` tags. There a
 ## Branch Naming
 
 Feature branches follow the pattern `claude/kebab-case-description-randomSuffix` (e.g. `claude/new-page-vibecodeweb-837hT`). `main` is the production branch.
+
+---
+
+## Instagram Automation (`ig-automation/`)
+
+A review-gated publishing pipeline for **@vibecodeweb.in** using the official Instagram Graph API v21.0.
+
+### Architecture
+```
+ig-automation/
+├─ config.php             ← GITIGNORED — secrets live here only
+├─ config.sample.php      ← committed template
+├─ queue.json             ← content queue (draft → pending_review → approved → published)
+├─ publisher.php          ← cron: publishes approved+due items
+├─ insights.php           ← cron: pulls weekly metrics
+├─ seed_content.php       ← seeds queue + regenerates post images
+├─ review.php             ← local approval dashboard
+├─ lib/graph.php          ← Graph API wrapper
+├─ lib/queue.php          ← queue helpers
+└─ assets-generator/
+   └─ generate.php        ← PHP GD 1080×1080 branded image generator
+ig-assets/                ← generated PNGs (committed, must be public on GlobeHost)
+```
+
+### Meta credentials (never commit — config.php only)
+- **IG account**: @vibecodeweb.in · IG Business Account ID: `17841423972351765`
+- **Facebook Page**: Vibecodeweb · Page ID: `1177970148735385`
+- **Meta app**: Samya Content Tools · App ID: `1537383894700364`
+- **System user**: vibecodeweb-publisher (ID: `61589583827535`) · never-expiring token
+- **Business portfolio**: Vibecodeweb.in (ID: `1006474768411908`)
+
+### Workflow
+1. `seed_content.php` populates `queue.json` with `pending_review` items + generates images
+2. Samya approves posts at `http://localhost/vibecodeweb/ig-automation/review.php`
+3. `publisher.php` (cron, hourly) picks up `approved` + due items and publishes via Graph API
+4. `insights.php` (cron, weekly) pulls metrics and writes `logs/insights-YYYY-MM-DD.json`
+
+### Commands
+```bash
+# Verify API connection
+I:\xampp\php\php.exe ig-automation/insights.php
+
+# Dry-run publisher (safe — no live posts)
+I:\xampp\php\php.exe ig-automation/publisher.php
+
+# Regenerate all post images
+I:\xampp\php\php.exe ig-automation/seed_content.php --images
+```
+
+### Rules
+- `config.php` is gitignored — **never commit it**
+- `dry_run = true` by default — flip to `false` only for an explicit live test, then flip back
+- No follow/unfollow/mass-DM automation — Instagram ToS violation
+
+### Pending (2026-06-07)
+- Set up GlobeHost hourly cron for `publisher.php` and weekly for `insights.php`
+- Upload `ig-assets/` to GlobeHost production so image URLs are publicly reachable
