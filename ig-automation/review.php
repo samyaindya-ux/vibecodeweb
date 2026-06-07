@@ -87,7 +87,7 @@ $assetsRel = '../ig-assets/'; // served from localhost/vibecodeweb/
 <body>
 <header>
   <h1>📸 VibeCodeWeb — Instagram Review</h1>
-  <div class="sub">Approve posts to queue them for publishing · @samya_vibecodeweb</div>
+  <div class="sub">Approve posts to queue them for publishing · @vibecodeweb.in</div>
 </header>
 <div class="wrap">
   <div class="stats">

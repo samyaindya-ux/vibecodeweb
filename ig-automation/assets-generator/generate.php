@@ -142,13 +142,13 @@ function vcw_generate_image(array $opts): string
 
         // Footer handle + site.
         if ($fontReg) {
-            imagettftext($img, 26, 0, $marginX, VCW_H - 70, $accent, $fontReg, '@samya_vibecodeweb');
+            imagettftext($img, 26, 0, $marginX, VCW_H - 70, $accent, $fontReg, '@vibecodeweb.in');
             imagettftext($img, 26, 0, $marginX, VCW_H - 70 + 38, $muted, $fontReg, 'vibecodeweb.in  ·  Proudly Built in India');
         }
     } else {
         // No TTF available — degrade gracefully with the bitmap font.
         imagestring($img, 5, $marginX, 400, $opts['headline'] ?? '', $white);
-        imagestring($img, 4, $marginX, VCW_H - 80, '@samya_vibecodeweb  ·  vibecodeweb.in', $accent);
+        imagestring($img, 4, $marginX, VCW_H - 80, '@vibecodeweb.in  ·  vibecodeweb.in', $accent);
     }
 
     $out = $opts['out'] ?? (__DIR__ . '/../../ig-assets/post.png');
