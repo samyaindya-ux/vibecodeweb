@@ -52,10 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
 
     if ($res) {
         $json = json_decode($res, true);
-        $text = $json['content'][0]['text'] ?? '{}';
-        preg_match('/\{.*\}/s', $text, $m);
-        $out = json_decode($m[0] ?? '{}', true);
-        echo json_encode(['ok' => true, 'data' => $out]);
+        $text = $json['content'][0]['text'] ?? '';
+        // Strip markdown code fences
+        $clean = preg_replace('/^```(?:json)?\s*/im', '', $text);
+        $clean = preg_replace('/```\s*$/im', '', $clean);
+        $clean = trim($clean);
+        // Try direct decode first, then regex fallback
+        $out = json_decode($clean, true);
+        if (!is_array($out) || empty($out)) {
+            preg_match('/\{.*\}/s', $clean, $m);
+            $out = json_decode($m[0] ?? '{}', true);
+        }
+        echo json_encode(['ok' => true, 'data' => $out ?: new stdClass(), '_raw' => substr($text, 0, 200)]);
     } else {
         echo json_encode(['error' => 'API call failed: ' . $curlErr]);
     }
