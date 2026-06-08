@@ -284,7 +284,7 @@ tailwind.config = {
                 <i class="fa-regular fa-bookmark ml-auto cursor-pointer hover:text-white transition-colors"></i>
               </div>
               <p class="text-white text-[11px] font-semibold mb-1">1,204 likes</p>
-              <div id="ig-caption-preview" class="text-[11px] text-gray-200 leading-relaxed max-h-20 overflow-hidden"></div>
+              <div id="ig-caption-preview" class="text-[11px] text-gray-200 leading-relaxed overflow-y-auto max-h-44 whitespace-pre-wrap"></div>
             </div>
           </div>
         </div>
@@ -533,9 +533,17 @@ async function generateIG(e) {
       const result = document.getElementById('ig-result');
       result.classList.remove('hidden');
 
-      document.getElementById('ig-hook-text').textContent     = d.hook    || '';
-      document.getElementById('ig-caption-text').textContent  = d.caption || '';
-      document.getElementById('ig-caption-preview').textContent = (d.caption||'').substring(0,120) + '...';
+      document.getElementById('ig-hook-text').textContent    = d.hook    || '';
+      document.getElementById('ig-caption-text').textContent = d.caption || '';
+
+      // Phone preview: hook + caption + hashtags, IG-style
+      const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const phoneTags = (d.hashtags||'').split(/\s+/).filter(t=>t.startsWith('#'));
+      document.getElementById('ig-caption-preview').innerHTML =
+        '<span class="font-semibold text-white">vibecodeweb.in</span> ' +
+        (d.hook    ? '<span class="italic text-gray-300">' + esc(d.hook) + '</span>\n\n' : '') +
+        esc(d.caption||'') +
+        (phoneTags.length ? '\n\n<span class="text-[#58b0e0]">' + esc(phoneTags.join(' ')) + '</span>' : '');
       document.getElementById('ig-cta').textContent            = d.cta       || '';
       document.getElementById('ig-time').textContent           = d.best_time || '';
 
