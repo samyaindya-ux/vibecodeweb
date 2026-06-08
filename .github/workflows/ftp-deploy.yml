@@ -12,42 +12,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Zip site files
+      - name: Test cPanel connectivity (debug)
         run: |
-          zip -r site.zip . \
-            --exclude "*.git*" \
-            --exclude ".github/*" \
-            --exclude "*.py" \
-            --exclude "*.ps1"
-
-      - name: Upload zip via cPanel UAPI
-        run: |
-          RESPONSE=$(curl -sk -w "\n%{http_code}" \
+          echo "=== Trying samya:Samya@888 on port 2083 ==="
+          curl -sk -o /tmp/r1.txt -w "HTTP:%{http_code}" \
             -u "samya:Samya@888" \
-            -F "file-0=@site.zip" \
-            "https://223.178.211.127:2083/execute/Fileman/upload_files?dir=/public_html")
-          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
-          BODY=$(echo "$RESPONSE" | head -1)
-          echo "HTTP: $HTTP_CODE"
-          echo "Response: $BODY"
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "Upload failed" && exit 1
-          fi
+            "https://223.178.211.127:2083/execute/Fileman/list?dir=/public_html" || true
+          echo "" && cat /tmp/r1.txt | head -c 500
 
-      - name: Extract zip on server
-        run: |
-          RESPONSE=$(curl -sk -w "\n%{http_code}" \
-            -u "samya:Samya@888" \
-            -d "dir=%2Fpublic_html&file=site.zip&type=zip" \
-            "https://223.178.211.127:2083/execute/Fileman/autoextract")
-          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
-          BODY=$(echo "$RESPONSE" | head -1)
-          echo "HTTP: $HTTP_CODE"
-          echo "Response: $BODY"
+          echo "=== Trying samya@vibecodeweb.in:Samya@888 on port 2083 ==="
+          curl -sk -o /tmp/r2.txt -w "HTTP:%{http_code}" \
+            -u "samya@vibecodeweb.in:Samya@888" \
+            "https://223.178.211.127:2083/execute/Fileman/list?dir=/public_html" || true
+          echo "" && cat /tmp/r2.txt | head -c 500
 
-      - name: Cleanup zip from server
-        run: |
-          curl -sk \
+          echo "=== Trying vibecodeweb.in on port 2083 ==="
+          curl -sk -o /tmp/r3.txt -w "HTTP:%{http_code}" \
             -u "samya:Samya@888" \
-            -d "files[]=site.zip&dir=%2Fpublic_html" \
-            "https://223.178.211.127:2083/execute/Fileman/trash_files" || true
+            "https://vibecodeweb.in:2083/execute/Fileman/list?dir=/public_html" || true
+          echo "" && cat /tmp/r3.txt | head -c 500
+
+          echo "=== Trying port 2082 (plain) ==="
+          curl -s -o /tmp/r4.txt -w "HTTP:%{http_code}" \
+            -u "samya:Samya@888" \
+            "http://223.178.211.127:2082/execute/Fileman/list?dir=/public_html" || true
+          echo "" && cat /tmp/r4.txt | head -c 500
