@@ -1,6 +1,9 @@
 <?php
-// VibeCodeWeb AI Tools — add your Anthropic API key below
-define('ANTHROPIC_KEY', 'YOUR_ANTHROPIC_API_KEY_HERE');
+// VibeCodeWeb AI Tools — key lives in tools_config.php (gitignored)
+if (file_exists(__DIR__ . '/tools_config.php')) {
+    require_once __DIR__ . '/tools_config.php';
+}
+if (!defined('ANTHROPIC_KEY')) define('ANTHROPIC_KEY', '');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
     header('Content-Type: application/json');
@@ -31,14 +34,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
         'messages'   => [['role' => 'user', 'content' => $prompt]]
     ]);
 
-    $ctx = stream_context_create(['http' => [
-        'method'  => 'POST',
-        'header'  => "Content-Type: application/json\r\nx-api-key: " . ANTHROPIC_KEY . "\r\nanthropic-version: 2023-06-01\r\n",
-        'content' => $payload,
-        'timeout' => 30
-    ]]);
+    $ch = curl_init('https://api.anthropic.com/v1/messages');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => $payload,
+        CURLOPT_HTTPHEADER     => [
+            'Content-Type: application/json',
+            'x-api-key: ' . ANTHROPIC_KEY,
+            'anthropic-version: 2023-06-01',
+        ],
+        CURLOPT_TIMEOUT        => 30,
+    ]);
+    $res     = curl_exec($ch);
+    $curlErr = curl_error($ch);
+    curl_close($ch);
 
-    $res = @file_get_contents('https://api.anthropic.com/v1/messages', false, $ctx);
     if ($res) {
         $json = json_decode($res, true);
         $text = $json['content'][0]['text'] ?? '{}';
@@ -46,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
         $out = json_decode($m[0] ?? '{}', true);
         echo json_encode(['ok' => true, 'data' => $out]);
     } else {
-        echo json_encode(['error' => 'API unavailable — add your Anthropic key to tools.php']);
+        echo json_encode(['error' => 'API call failed: ' . $curlErr]);
     }
     exit;
 }
