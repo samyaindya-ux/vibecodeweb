@@ -1,20 +1,25 @@
 <?php
+// Use writable dir for sessions on shared hosting
+$sessDir = __DIR__ . '/writable/sessions';
+if (!is_dir($sessDir)) @mkdir($sessDir, 0755, true);
+session_save_path($sessDir);
 session_start();
 
 // Login gate
 define('DEMO_PASSWORD', 'demo@2026');
+$selfUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 
 if (isset($_POST['_login'])) {
     if ($_POST['_password'] === DEMO_PASSWORD) {
         $_SESSION['tools_auth'] = true;
-        header('Location: tools.php'); exit;
+        header('Location: ' . $selfUrl); exit;
     } else {
         $loginError = 'Incorrect password. Try again.';
     }
 }
 if (isset($_POST['_logout'])) {
     session_destroy();
-    header('Location: tools.php'); exit;
+    header('Location: ' . $selfUrl); exit;
 }
 
 if (empty($_SESSION['tools_auth'])) {
