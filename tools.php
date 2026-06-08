@@ -271,13 +271,20 @@ tailwind.config = {
               </div>
               <i class="fa-solid fa-ellipsis text-gray-400 ml-auto text-xs"></i>
             </div>
-            <!-- Image with hook overlay -->
-            <div class="relative bg-gradient-to-br from-brand-primary/20 via-brand-accent/20 to-brand-saffron/20" style="height:160px">
-              <div class="absolute inset-0 flex items-center justify-center">
-                <i class="fa-brands fa-instagram text-4xl text-white/15"></i>
-              </div>
-              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-3 pt-6 pb-2">
-                <p id="ig-hook-phone" class="text-white text-[11px] font-semibold italic leading-snug"></p>
+            <!-- Post visual: live AI-generated poster -->
+            <div id="ig-visual" class="relative aspect-square overflow-hidden bg-gradient-to-br from-brand-primary via-brand-accent to-brand-saffron">
+              <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/10 blur-2xl"></div>
+              <div class="absolute -bottom-12 -left-8 w-44 h-44 rounded-full bg-black/20 blur-2xl"></div>
+              <div class="relative h-full flex flex-col justify-between p-5">
+                <div class="flex items-center justify-between">
+                  <span class="text-white/90 text-[10px] font-extrabold tracking-[0.2em] uppercase">VibeCodeWeb</span>
+                  <i class="fa-brands fa-instagram text-white/80 text-sm"></i>
+                </div>
+                <p id="ig-visual-hook" class="text-white font-extrabold leading-[1.15] drop-shadow-lg"></p>
+                <div class="flex items-center justify-between">
+                  <span class="text-white/80 text-[9px] font-semibold">@vibecodeweb.in</span>
+                  <span class="text-white/90 text-[9px] font-bold flex items-center gap-1"><i class="fa-solid fa-arrow-up-right-from-square"></i> Learn more</span>
+                </div>
               </div>
             </div>
             <!-- Actions -->
@@ -541,7 +548,12 @@ async function generateIG(e) {
 
       document.getElementById('ig-hook-text').textContent    = d.hook    || '';
       document.getElementById('ig-caption-text').textContent = d.caption || '';
-      document.getElementById('ig-hook-phone').textContent   = d.hook    || '';
+
+      // Live poster headline inside the IG image — auto-size to fit
+      const vh = document.getElementById('ig-visual-hook');
+      vh.textContent = d.hook || (d.caption||'').split(/[.!?\n]/)[0] || '';
+      const len = vh.textContent.length;
+      vh.style.fontSize = len > 90 ? '15px' : len > 60 ? '18px' : len > 35 ? '22px' : '27px';
 
       // Phone caption area: username + caption + hashtags
       const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
