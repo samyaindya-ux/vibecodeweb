@@ -1,4 +1,4 @@
-name: Deploy to GlobeHost FTP
+name: Deploy to GlobeHost via cPanel API
 
 on:
   push:
@@ -6,25 +6,48 @@ on:
   workflow_dispatch:
 
 jobs:
-  ftp-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: 223.178.211.127
-          username: samya@vibecodeweb.in
-          password: "Samya@888"
-          server-dir: /public_html/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/make_transparent.py
-            **/crop.py
-            **/crop.ps1
-            **/temp_crop.ps1
-            **/transparent.ps1
+      - name: Zip site files
+        run: |
+          zip -r site.zip . \
+            --exclude "*.git*" \
+            --exclude ".github/*" \
+            --exclude "*.py" \
+            --exclude "*.ps1"
+
+      - name: Upload zip via cPanel UAPI
+        run: |
+          RESPONSE=$(curl -sk -w "\n%{http_code}" \
+            -u "samya:Samya@888" \
+            -F "file-0=@site.zip" \
+            "https://223.178.211.127:2083/execute/Fileman/upload_files?dir=/public_html")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | head -1)
+          echo "HTTP: $HTTP_CODE"
+          echo "Response: $BODY"
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "Upload failed" && exit 1
+          fi
+
+      - name: Extract zip on server
+        run: |
+          RESPONSE=$(curl -sk -w "\n%{http_code}" \
+            -u "samya:Samya@888" \
+            -d "dir=%2Fpublic_html&file=site.zip&type=zip" \
+            "https://223.178.211.127:2083/execute/Fileman/autoextract")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | head -1)
+          echo "HTTP: $HTTP_CODE"
+          echo "Response: $BODY"
+
+      - name: Cleanup zip from server
+        run: |
+          curl -sk \
+            -u "samya:Samya@888" \
+            -d "files[]=site.zip&dir=%2Fpublic_html" \
+            "https://223.178.211.127:2083/execute/Fileman/trash_files" || true
