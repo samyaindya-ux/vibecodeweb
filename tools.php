@@ -260,31 +260,37 @@ tailwind.config = {
       <!-- Result (hidden until generated) -->
       <div id="ig-result" class="hidden result-card space-y-4">
         <!-- Phone mockup -->
-        <div class="phone-frame max-w-xs mx-auto">
+        <div class="phone-frame mx-auto" style="max-width:320px">
           <div class="phone-screen">
+            <!-- Header -->
             <div class="ig-header">
               <div class="ig-avatar"></div>
               <div>
                 <p class="text-white text-xs font-semibold leading-tight">vibecodeweb.in</p>
-                <p class="text-gray-500 text-[10px]">Sponsored</p>
+                <p class="text-gray-500 text-[10px]">Just now</p>
               </div>
               <i class="fa-solid fa-ellipsis text-gray-400 ml-auto text-xs"></i>
             </div>
-            <div class="bg-gradient-to-br from-brand-primary/20 via-brand-accent/20 to-brand-saffron/20 aspect-square flex items-center justify-center">
-              <div class="text-center p-4">
-                <i class="fa-brands fa-instagram text-5xl text-white/30 mb-2"></i>
-                <p class="text-white/50 text-xs">Your visual here</p>
+            <!-- Image with hook overlay -->
+            <div class="relative bg-gradient-to-br from-brand-primary/20 via-brand-accent/20 to-brand-saffron/20" style="height:160px">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <i class="fa-brands fa-instagram text-4xl text-white/15"></i>
+              </div>
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-3 pt-6 pb-2">
+                <p id="ig-hook-phone" class="text-white text-[11px] font-semibold italic leading-snug"></p>
               </div>
             </div>
-            <div class="bg-black p-3">
-              <div class="flex gap-4 text-gray-400 text-lg mb-2">
-                <i class="fa-regular fa-heart hover:text-red-500 cursor-pointer transition-colors"></i>
-                <i class="fa-regular fa-comment cursor-pointer hover:text-white transition-colors"></i>
-                <i class="fa-regular fa-paper-plane cursor-pointer hover:text-white transition-colors"></i>
-                <i class="fa-regular fa-bookmark ml-auto cursor-pointer hover:text-white transition-colors"></i>
-              </div>
+            <!-- Actions -->
+            <div class="bg-black px-3 pt-2 pb-1 flex gap-4 text-gray-400 text-base">
+              <i class="fa-regular fa-heart hover:text-red-500 cursor-pointer transition-colors"></i>
+              <i class="fa-regular fa-comment cursor-pointer hover:text-white transition-colors"></i>
+              <i class="fa-regular fa-paper-plane cursor-pointer hover:text-white transition-colors"></i>
+              <i class="fa-regular fa-bookmark ml-auto cursor-pointer hover:text-white transition-colors"></i>
+            </div>
+            <!-- Caption + hashtags — scrollable -->
+            <div class="bg-black px-3 pb-3 overflow-y-auto" style="max-height:220px">
               <p class="text-white text-[11px] font-semibold mb-1">1,204 likes</p>
-              <div id="ig-caption-preview" class="text-[11px] text-gray-200 leading-relaxed overflow-y-auto max-h-44 whitespace-pre-wrap"></div>
+              <div id="ig-caption-preview" class="text-[11px] text-gray-200 leading-relaxed whitespace-pre-wrap"></div>
             </div>
           </div>
         </div>
@@ -535,13 +541,13 @@ async function generateIG(e) {
 
       document.getElementById('ig-hook-text').textContent    = d.hook    || '';
       document.getElementById('ig-caption-text').textContent = d.caption || '';
+      document.getElementById('ig-hook-phone').textContent   = d.hook    || '';
 
-      // Phone preview: hook + caption + hashtags, IG-style
+      // Phone caption area: username + caption + hashtags
       const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       const phoneTags = (d.hashtags||'').split(/\s+/).filter(t=>t.startsWith('#'));
       document.getElementById('ig-caption-preview').innerHTML =
         '<span class="font-semibold text-white">vibecodeweb.in</span> ' +
-        (d.hook    ? '<span class="italic text-gray-300">' + esc(d.hook) + '</span>\n\n' : '') +
         esc(d.caption||'') +
         (phoneTags.length ? '\n\n<span class="text-[#58b0e0]">' + esc(phoneTags.join(' ')) + '</span>' : '');
       document.getElementById('ig-cta').textContent            = d.cta       || '';
