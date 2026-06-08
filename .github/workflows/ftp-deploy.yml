@@ -1,0 +1,30 @@
+name: Deploy to GlobeHost FTP
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: 223.178.211.127
+          username: samya@vibecodeweb.in
+          password: "Samya@888"
+          server-dir: /public_html/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/make_transparent.py
+            **/crop.py
+            **/crop.ps1
+            **/temp_crop.ps1
+            **/transparent.ps1
