@@ -1,4 +1,59 @@
 <?php
+session_start();
+
+// Login gate
+define('DEMO_PASSWORD', 'demo@2026');
+
+if (isset($_POST['_login'])) {
+    if ($_POST['_password'] === DEMO_PASSWORD) {
+        $_SESSION['tools_auth'] = true;
+        header('Location: tools.php'); exit;
+    } else {
+        $loginError = 'Incorrect password. Try again.';
+    }
+}
+if (isset($_POST['_logout'])) {
+    session_destroy();
+    header('Location: tools.php'); exit;
+}
+
+if (empty($_SESSION['tools_auth'])) {
+?><!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Power Tools — VibeCodeWeb.in</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:'class',theme:{extend:{fontFamily:{sans:['Outfit','sans-serif']},colors:{brand:{dark:'#0f172a',darker:'#020617',card:'#1e293b',primary:'#3b82f6',accent:'#8b5cf6',neon:'#10b981',saffron:'#f97316'}}}}}</script>
+<style>body{background:#020617;color:#f8fafc;font-family:'Outfit',sans-serif}.glass{background:rgba(30,41,59,.5);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08)}.input-field{background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);color:#fff;transition:border-color .3s}.input-field:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15)}.text-grad{background:linear-gradient(135deg,#3b82f6,#8b5cf6,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}</style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-4">
+  <div class="glass rounded-3xl p-10 w-full max-w-sm text-center shadow-2xl">
+    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center mx-auto mb-6">
+      <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+    </div>
+    <h1 class="text-2xl font-bold mb-1">AI Power Tools</h1>
+    <p class="text-gray-400 text-sm mb-8">VibeCodeWeb.in — Demo Access</p>
+    <?php if (!empty($loginError)): ?>
+      <p class="text-red-400 text-sm mb-4 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2"><?= htmlspecialchars($loginError) ?></p>
+    <?php endif; ?>
+    <form method="POST" class="space-y-4">
+      <input type="hidden" name="_login" value="1"/>
+      <input type="password" name="_password" placeholder="Enter password" autofocus required
+        class="input-field w-full rounded-xl px-4 py-3 text-sm placeholder-gray-500 text-center tracking-widest"/>
+      <button type="submit"
+        class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent text-white font-bold text-sm hover:opacity-90 transition-opacity">
+        Enter Demo
+      </button>
+    </form>
+  </div>
+</body>
+</html><?php
+    exit;
+}
+
 // VibeCodeWeb AI Tools — key lives in tools_config.php (gitignored)
 if (file_exists(__DIR__ . '/tools_config.php')) {
     require_once __DIR__ . '/tools_config.php';
@@ -63,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
             preg_match('/\{.*\}/s', $clean, $m);
             $out = json_decode($m[0] ?? '{}', true);
         }
-        echo json_encode(['ok' => true, 'data' => $out ?: new stdClass(), '_raw' => substr($text, 0, 200)]);
+        echo json_encode(['ok' => true, 'data' => $out ?: new stdClass(), '_raw' => substr($text, 0, 200), '_api' => substr($res, 0, 500), '_type' => $json['type'] ?? '', '_err' => $json['error'] ?? '']);
     } else {
         echo json_encode(['error' => 'API call failed: ' . $curlErr]);
     }
@@ -151,6 +206,10 @@ tailwind.config = {
         <a href="/#contact"  class="px-5 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-brand-saffron to-brand-primary hover:opacity-90 transition-opacity">
           Contact <i class="fa-solid fa-paper-plane ml-1 text-xs"></i>
         </a>
+        <form method="POST" class="inline">
+          <input type="hidden" name="_logout" value="1"/>
+          <button type="submit" class="text-gray-500 hover:text-gray-300 text-xs transition-colors">Logout</button>
+        </form>
       </div>
     </div>
   </div>
