@@ -294,10 +294,12 @@ tailwind.config = {
               <i class="fa-regular fa-paper-plane cursor-pointer hover:text-white transition-colors"></i>
               <i class="fa-regular fa-bookmark ml-auto cursor-pointer hover:text-white transition-colors"></i>
             </div>
-            <!-- Caption + hashtags — scrollable -->
-            <div class="bg-black px-3 pb-3 overflow-y-auto" style="max-height:220px">
-              <p class="text-white text-[11px] font-semibold mb-1">1,204 likes</p>
+            <!-- Caption + hashtags — full post body -->
+            <div class="bg-black px-3 pb-4 pt-1">
+              <p class="text-white text-[11px] font-semibold mb-1.5">1,204 likes</p>
               <div id="ig-caption-preview" class="text-[11px] text-gray-200 leading-relaxed whitespace-pre-wrap"></div>
+              <p class="text-gray-500 text-[10px] mt-2 cursor-pointer hover:text-gray-400">View all 86 comments</p>
+              <p class="text-gray-600 text-[9px] mt-1 uppercase tracking-wide">Just now</p>
             </div>
           </div>
         </div>
@@ -560,6 +562,7 @@ async function generateIG(e) {
       const phoneTags = (d.hashtags||'').split(/\s+/).filter(t=>t.startsWith('#'));
       document.getElementById('ig-caption-preview').innerHTML =
         '<span class="font-semibold text-white">vibecodeweb.in</span> ' +
+        (d.hook ? '<span class="text-white">' + esc(d.hook) + '</span>\n\n' : '') +
         esc(d.caption||'') +
         (phoneTags.length ? '\n\n<span class="text-[#58b0e0]">' + esc(phoneTags.join(' ')) + '</span>' : '');
       document.getElementById('ig-cta').textContent            = d.cta       || '';
