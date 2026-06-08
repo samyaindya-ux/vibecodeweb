@@ -16,7 +16,7 @@ jobs:
         run: |
           DEPLOY_URL="https://vibecodeweb.in/deploy.php"
           SECRET="vibe_deploy_2026"
-          FILES="index.html index2.html robots.txt"
+          FILES="index.html index2.html robots.txt tools.php"
 
           for FILE in $FILES; do
             if [ ! -f "$FILE" ]; then
@@ -33,5 +33,6 @@ jobs:
               -H "Content-Type: application/json" \
               -H "X-Deploy-Sig: $SIG" \
               -d "$PAYLOAD")
-            echo "  Response: $RESP"
+            echo "  $RESP"
           done
+          echo "All files deployed!"
