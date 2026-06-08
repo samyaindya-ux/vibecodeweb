@@ -253,9 +253,11 @@ tailwind.config = {
 <!-- IG TOOL -->
 <!-- ============================================================ -->
 <section id="panel-ig" class="tool-panel active max-w-6xl mx-auto px-4 pb-24">
+
+  <!-- Row 1: Form (left) + Phone (right) -->
   <div class="grid lg:grid-cols-2 gap-8 items-start">
 
-    <!-- Form -->
+    <!-- LEFT: Form -->
     <div class="glass rounded-3xl p-8">
       <div class="flex items-center gap-3 mb-7">
         <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500 to-brand-saffron flex items-center justify-center">
@@ -266,7 +268,6 @@ tailwind.config = {
           <p class="text-xs text-gray-400">Caption · Hashtags · Strategy · CTA</p>
         </div>
       </div>
-
       <form id="ig-form" class="space-y-5" onsubmit="generateIG(event)">
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-2">Product / Topic <span class="text-brand-saffron">*</span></label>
@@ -309,14 +310,15 @@ tailwind.config = {
       </form>
     </div>
 
-    <!-- Preview -->
-    <div id="ig-result-wrap" class="space-y-5">
-      <!-- Placeholder state -->
-      <div id="ig-placeholder" class="glass rounded-3xl p-8 text-center">
+    <!-- RIGHT: Phone preview -->
+    <div id="ig-result-wrap" class="flex items-center justify-center">
+
+      <!-- Placeholder -->
+      <div id="ig-placeholder" class="glass rounded-3xl p-8 text-center w-full">
         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500/20 to-brand-saffron/20 flex items-center justify-center mx-auto mb-4 border border-white/10">
           <i class="fa-brands fa-instagram text-3xl text-pink-400"></i>
         </div>
-        <p class="text-gray-400 text-sm">Fill in the form and click <span class="text-white font-semibold">Generate Content</span> to see a live AI-crafted Instagram post appear here — complete with caption, hashtags, and strategy.</p>
+        <p class="text-gray-400 text-sm">Fill in the form and click <span class="text-white font-semibold">Generate Content</span> to see a live AI-crafted Instagram post appear here.</p>
         <div class="mt-6 grid grid-cols-3 gap-3 text-xs text-gray-500">
           <div class="glass-dark rounded-xl p-3"><i class="fa-solid fa-pen-nib text-pink-400 mb-1 block"></i>Smart Caption</div>
           <div class="glass-dark rounded-xl p-3"><i class="fa-solid fa-hashtag text-brand-primary mb-1 block"></i>15 Hashtags</div>
@@ -324,12 +326,10 @@ tailwind.config = {
         </div>
       </div>
 
-      <!-- Result (hidden until generated) -->
-      <div id="ig-result" class="hidden result-card space-y-4">
-        <!-- Phone mockup -->
-        <div class="phone-frame mx-auto" style="max-width:320px">
+      <!-- Phone mockup (shown after generation) -->
+      <div id="ig-result" class="hidden result-card">
+        <div class="phone-frame mx-auto" style="max-width:300px">
           <div class="phone-screen">
-            <!-- Header -->
             <div class="ig-header">
               <div class="ig-avatar"></div>
               <div>
@@ -338,7 +338,7 @@ tailwind.config = {
               </div>
               <i class="fa-solid fa-ellipsis text-gray-400 ml-auto text-xs"></i>
             </div>
-            <!-- Post visual: live AI-generated poster -->
+            <!-- Poster image -->
             <div id="ig-visual" class="relative aspect-square overflow-hidden bg-gradient-to-br from-brand-primary via-brand-accent to-brand-saffron">
               <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/10 blur-2xl"></div>
               <div class="absolute -bottom-12 -left-8 w-44 h-44 rounded-full bg-black/20 blur-2xl"></div>
@@ -361,7 +361,7 @@ tailwind.config = {
               <i class="fa-regular fa-paper-plane cursor-pointer hover:text-white transition-colors"></i>
               <i class="fa-regular fa-bookmark ml-auto cursor-pointer hover:text-white transition-colors"></i>
             </div>
-            <!-- Caption + hashtags — full post body -->
+            <!-- Caption body -->
             <div class="bg-black px-3 pb-4 pt-1">
               <p class="text-white text-[11px] font-semibold mb-1.5">1,204 likes</p>
               <div id="ig-caption-preview" class="text-[11px] text-gray-200 leading-relaxed whitespace-pre-wrap"></div>
@@ -370,49 +370,53 @@ tailwind.config = {
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Hook -->
-        <div class="glass rounded-2xl p-5">
-          <div class="flex items-center justify-between mb-2">
-            <p class="text-xs font-semibold text-brand-saffron uppercase tracking-wider"><i class="fa-solid fa-bolt mr-1"></i>Hook Line</p>
-            <button onclick="copyText('ig-hook-text')" class="copy-btn text-xs text-gray-400 hover:text-white border border-white/10 rounded-lg px-2 py-1 hover:border-white/30 transition-all"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
-          </div>
-          <p id="ig-hook-text" class="text-white font-semibold text-sm italic"></p>
-        </div>
+    </div>
+  </div>
 
-        <!-- Caption -->
-        <div class="glass rounded-2xl p-5">
-          <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-semibold text-pink-400 uppercase tracking-wider"><i class="fa-solid fa-pen-nib mr-1"></i>Caption</p>
-            <button onclick="copyText('ig-caption-text')" class="copy-btn text-xs text-gray-400 hover:text-white border border-white/10 rounded-lg px-2 py-1 hover:border-white/30 transition-all"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
-          </div>
-          <p id="ig-caption-text" class="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap"></p>
+  <!-- Row 2: Copy cards — full width, shown after generation -->
+  <div id="ig-copy-section" class="hidden mt-8 fade-up">
+    <div class="grid md:grid-cols-3 gap-4 mb-4">
+      <!-- Hook -->
+      <div class="glass rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-xs font-semibold text-brand-saffron uppercase tracking-wider"><i class="fa-solid fa-bolt mr-1"></i>Hook Line</p>
+          <button onclick="copyText('ig-hook-text')" class="copy-btn text-xs text-gray-400 hover:text-white border border-white/10 rounded-lg px-2 py-1 hover:border-white/30 transition-all"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
         </div>
-
-        <!-- Hashtags -->
-        <div class="glass rounded-2xl p-5">
-          <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-semibold text-brand-primary uppercase tracking-wider"><i class="fa-solid fa-hashtag mr-1"></i>Hashtags</p>
-            <button onclick="copyText('ig-hashtags-raw')" class="copy-btn text-xs text-gray-400 hover:text-white border border-white/10 rounded-lg px-2 py-1 hover:border-white/30 transition-all"><i class="fa-regular fa-copy mr-1"></i>Copy All</button>
-          </div>
-          <div id="ig-hashtags-pills"></div>
-          <span id="ig-hashtags-raw" class="hidden"></span>
+        <p id="ig-hook-text" class="text-white font-semibold text-sm italic"></p>
+      </div>
+      <!-- Caption -->
+      <div class="glass rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-xs font-semibold text-pink-400 uppercase tracking-wider"><i class="fa-solid fa-pen-nib mr-1"></i>Caption</p>
+          <button onclick="copyText('ig-caption-text')" class="copy-btn text-xs text-gray-400 hover:text-white border border-white/10 rounded-lg px-2 py-1 hover:border-white/30 transition-all"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
         </div>
-
-        <!-- CTA + Time -->
-        <div class="grid grid-cols-2 gap-4">
-          <div class="glass rounded-2xl p-4">
-            <p class="text-xs font-semibold text-brand-neon uppercase tracking-wider mb-2"><i class="fa-solid fa-arrow-pointer mr-1"></i>CTA</p>
-            <p id="ig-cta" class="text-gray-200 text-sm"></p>
-          </div>
-          <div class="glass rounded-2xl p-4">
-            <p class="text-xs font-semibold text-brand-accent uppercase tracking-wider mb-2"><i class="fa-regular fa-clock mr-1"></i>Best Time</p>
-            <p id="ig-time" class="text-gray-200 text-sm"></p>
-          </div>
+        <p id="ig-caption-text" class="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap max-h-32 overflow-y-auto"></p>
+      </div>
+      <!-- Hashtags -->
+      <div class="glass rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-xs font-semibold text-brand-primary uppercase tracking-wider"><i class="fa-solid fa-hashtag mr-1"></i>Hashtags</p>
+          <button onclick="copyText('ig-hashtags-raw')" class="copy-btn text-xs text-gray-400 hover:text-white border border-white/10 rounded-lg px-2 py-1 hover:border-white/30 transition-all"><i class="fa-regular fa-copy mr-1"></i>Copy All</button>
         </div>
+        <div id="ig-hashtags-pills"></div>
+        <span id="ig-hashtags-raw" class="hidden"></span>
+      </div>
+    </div>
+    <!-- CTA + Best Time -->
+    <div class="grid grid-cols-2 gap-4">
+      <div class="glass rounded-2xl p-4">
+        <p class="text-xs font-semibold text-brand-neon uppercase tracking-wider mb-2"><i class="fa-solid fa-arrow-pointer mr-1"></i>CTA</p>
+        <p id="ig-cta" class="text-gray-200 text-sm"></p>
+      </div>
+      <div class="glass rounded-2xl p-4">
+        <p class="text-xs font-semibold text-brand-accent uppercase tracking-wider mb-2"><i class="fa-regular fa-clock mr-1"></i>Best Time</p>
+        <p id="ig-time" class="text-gray-200 text-sm"></p>
       </div>
     </div>
   </div>
+
 </section>
 
 <!-- ============================================================ -->
@@ -612,8 +616,8 @@ async function generateIG(e) {
     if (json.ok && json.data) {
       const d = json.data;
       document.getElementById('ig-placeholder').style.display = 'none';
-      const result = document.getElementById('ig-result');
-      result.classList.remove('hidden');
+      document.getElementById('ig-result').classList.remove('hidden');
+      document.getElementById('ig-copy-section').classList.remove('hidden');
 
       document.getElementById('ig-hook-text').textContent    = d.hook    || '';
       document.getElementById('ig-caption-text').textContent = d.caption || '';
