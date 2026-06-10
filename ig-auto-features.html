@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IG Auto — Review &amp; New Post System | VibeCodeWeb</title>
+    <meta name="description"
+        content="How the VibeCodeWeb IG Auto Instagram automation works — the review-gated approval dashboard and the AI-powered new post system.">
+    <link rel="icon" type="image/png" href="images/new_site_logo_transparent.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-darker': '#020617',
+                        'brand-dark': '#0f172a',
+                        'brand-primary': '#3b82f6',
+                        'brand-neon': '#10b981',
+                        'brand-saffron': '#f97316',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            background-color: #020617;
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, #f97316, #3b82f6, #10b981);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Top bar -->
+    <header class="border-b border-white/5 sticky top-0 z-50 bg-brand-darker/80 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="images/new_site_logo_transparent.png" alt="VibeCodeWeb"
+                    class="h-10 w-10 object-contain rounded-lg border border-white/10 bg-brand-darker/50 p-1">
+                <span class="font-bold text-lg">Vibe<span class="text-gradient">Code</span>Web</span>
+            </a>
+            <a href="index.html"
+                class="inline-flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors">
+                <i class="fa-solid fa-arrow-left text-xs"></i> Back to home
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="relative overflow-hidden pt-20 pb-16 text-center">
+        <div
+            class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-pink-500/10 via-brand-darker to-brand-darker pointer-events-none">
+        </div>
+        <div class="max-w-3xl mx-auto px-4 relative">
+            <span
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-pink-500/40 bg-pink-500/10 text-pink-300 text-sm font-semibold mb-6">
+                <i class="fa-brands fa-instagram"></i> IG Auto · Instagram Automation
+            </span>
+            <h1 class="text-4xl md:text-6xl font-serif font-bold mb-6 leading-tight">
+                Review &amp; <span class="text-gradient">New Post</span> System
+            </h1>
+            <p class="text-lg text-gray-300 leading-relaxed">
+                A review-gated, ToS-safe Instagram publishing pipeline. Every post is AI-generated, human-approved, and
+                auto-published on schedule — so your feed stays active without breaking Instagram's rules.
+            </p>
+            <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="https://vibecodeweb.in/ig_auto/engine" target="_blank" rel="noopener noreferrer"
+                    class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-bold text-white bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-500 hover:to-pink-400 transition-all shadow-[0_0_25px_rgba(236,72,153,0.4)]">
+                    <i class="fa-brands fa-instagram"></i> Try the Engine — ₹49
+                </a>
+                <a href="https://vibecodeweb.in/ig_auto/login" target="_blank" rel="noopener noreferrer"
+                    class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-medium text-white glass-card hover:border-pink-500/40 transition-all">
+                    Sign in to dashboard <i class="fa-solid fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Post System -->
+    <section class="py-16 border-t border-white/5">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-brand-primary">Create</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mt-2">The New Post System</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto mt-4">Turn an idea into a ready-to-publish Instagram post in
+                    seconds — caption, hashtags, hook, call-to-action and a branded image, all AI-generated.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card rounded-2xl p-7">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center mb-5">
+                        <i class="fa-solid fa-wand-magic-sparkles text-xl text-brand-primary"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">AI content generation</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Enter a topic, niche and tone. The engine writes an
+                        engaging caption, 15 relevant hashtags, a scroll-stopping hook and a strong CTA.</p>
+                </div>
+                <div class="glass-card rounded-2xl p-7">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-brand-neon/10 border border-brand-neon/20 flex items-center justify-center mb-5">
+                        <i class="fa-solid fa-image text-xl text-brand-neon"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Branded image generator</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">A 1080×1080 branded graphic is generated on the fly
+                        with your headline and accent colour — no designer needed.</p>
+                </div>
+                <div class="glass-card rounded-2xl p-7">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-brand-saffron/10 border border-brand-saffron/20 flex items-center justify-center mb-5">
+                        <i class="fa-solid fa-mobile-screen-button text-xl text-brand-saffron"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Live phone preview</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">See exactly how the post will look in the Instagram
+                        feed before it ever goes into the review queue.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Review System -->
+    <section class="py-16 border-t border-white/5">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-pink-400">Approve</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mt-2">The Review Dashboard</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto mt-4">Nothing posts without a human saying yes. The review
+                    dashboard is a tabbed workflow that keeps you in full control of every post.</p>
+            </div>
+
+            <!-- Status tabs -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <div class="glass-card rounded-xl p-5 text-center">
+                    <i class="fa-solid fa-clock text-2xl text-amber-400 mb-3"></i>
+                    <h4 class="font-bold">Pending</h4>
+                    <p class="text-gray-400 text-xs mt-1">Edit, schedule, approve or reject new drafts.</p>
+                </div>
+                <div class="glass-card rounded-xl p-5 text-center">
+                    <i class="fa-solid fa-circle-check text-2xl text-brand-neon mb-3"></i>
+                    <h4 class="font-bold">Approved</h4>
+                    <p class="text-gray-400 text-xs mt-1">Tick posts and publish selected ones instantly.</p>
+                </div>
+                <div class="glass-card rounded-xl p-5 text-center">
+                    <i class="fa-solid fa-paper-plane text-2xl text-brand-primary mb-3"></i>
+                    <h4 class="font-bold">Published</h4>
+                    <p class="text-gray-400 text-xs mt-1">Read-only record with image, time and media ID.</p>
+                </div>
+                <div class="glass-card rounded-xl p-5 text-center">
+                    <i class="fa-solid fa-rotate-left text-2xl text-gray-400 mb-3"></i>
+                    <h4 class="font-bold">Rejected</h4>
+                    <p class="text-gray-400 text-xs mt-1">Restore back to review any time.</p>
+                </div>
+            </div>
+
+            <!-- Feature list -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card rounded-2xl p-7 flex gap-4">
+                    <i class="fa-solid fa-shield-halved text-xl text-pink-400 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold mb-1">Review-gated &amp; ToS-safe</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">No follow/unfollow or mass-DM automation — only
+                            compliant publishing via the official Instagram Graph API.</p>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-7 flex gap-4">
+                    <i class="fa-solid fa-list-check text-xl text-brand-neon mt-1"></i>
+                    <div>
+                        <h3 class="font-bold mb-1">Selectable publishing</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Tick one or more approved posts and hit "Publish
+                            Selected" — only the checked posts go live.</p>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-7 flex gap-4">
+                    <i class="fa-solid fa-calendar-days text-xl text-brand-saffron mt-1"></i>
+                    <div>
+                        <h3 class="font-bold mb-1">Scheduled auto-publishing</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Approve once and an hourly job publishes due
+                            posts automatically — your feed stays active hands-free.</p>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-7 flex gap-4">
+                    <i class="fa-solid fa-pen-to-square text-xl text-brand-primary mt-1"></i>
+                    <div>
+                        <h3 class="font-bold mb-1">Inline editing</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Tweak the caption, hashtags or schedule right in
+                            the dashboard before approving.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pro coming soon -->
+    <section class="py-16 border-t border-white/5">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <span
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-300 text-sm font-semibold mb-6">
+                <i class="fa-solid fa-crown"></i> Coming Soon
+            </span>
+            <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">Pro <span class="text-gradient">Subscription</span>
+            </h2>
+            <p class="text-gray-400 leading-relaxed">
+                Pay-per-post is just the start. A Pro monthly subscription is on the way — unlimited generations, bulk
+                scheduling, multiple Instagram accounts and priority publishing. Want early access?
+            </p>
+            <a href="https://wa.me/919477443425" target="_blank" rel="noopener noreferrer"
+                class="mt-8 inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-bold text-brand-darker bg-brand-neon hover:bg-emerald-400 transition-all shadow-[0_0_25px_rgba(16,185,129,0.4)]">
+                <i class="fa-brands fa-whatsapp text-xl"></i> Join the waitlist
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-400">
+            <span>© <span id="year"></span> VibeCodeWeb · Proudly Built in India 🇮🇳</span>
+            <a href="index.html" class="hover:text-white transition-colors">← Back to vibecodeweb.in</a>
+        </div>
+    </footer>
+
+    <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+
+</html>
