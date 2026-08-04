@@ -238,6 +238,8 @@
                             class="text-gray-300 hover:text-brand-neon font-medium text-sm transition-colors">Services</a>
                         <a href="#products"
                             class="text-gray-300 hover:text-pink-400 font-medium text-sm transition-colors">Products</a>
+                        <a href="plugins.html"
+                            class="text-gray-300 hover:text-brand-primary font-medium text-sm transition-colors">Plugins</a>
                         <a href="#pricing"
                             class="text-gray-300 hover:text-brand-saffron font-medium text-sm transition-colors">Pricing</a>
                         <a href="#about-us"
@@ -277,6 +279,8 @@
                     Services</a>
                 <a href="#products"
                     class="mobile-link text-gray-300 hover:text-pink-400 font-medium text-lg border-b border-white/5 pb-2">Products</a>
+                <a href="plugins.html"
+                    class="mobile-link text-gray-300 hover:text-brand-primary font-medium text-lg border-b border-white/5 pb-2">Plugins</a>
                 <a href="#pricing"
                     class="mobile-link text-gray-300 hover:text-brand-saffron font-medium text-lg border-b border-white/5 pb-2">Pricing</a>
                 <a href="#about-us"
@@ -853,7 +857,7 @@
                 <p class="text-3xl md:text-5xl font-serif font-bold">Our <span class="text-gradient">Products</span></p>
                 <p class="text-gray-400 max-w-xl mx-auto mt-4">Real products and demos — built and operated by VibeCodeWeb.</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
 
                 <!-- Instagram Automation -->
                 <div class="glass-card rounded-2xl p-8 group hover:border-pink-500/40 flex flex-col reveal delay-100 text-center items-center">
@@ -900,6 +904,23 @@
                     <div class="mt-auto pt-5">
                         <a href="https://vibecodeweb.in/vibecodeweb_demo/login" target="_blank" rel="noopener noreferrer"
                             class="inline-flex items-center gap-2 text-brand-primary font-semibold text-sm hover:gap-3 transition-all">
+                            Launch Demo <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- AI Chatbot Service -->
+                <div class="glass-card rounded-2xl p-8 group hover:border-brand-accent/40 flex flex-col reveal delay-300 text-center items-center">
+                    <div
+                        class="w-14 h-14 rounded-xl bg-brand-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 border border-brand-accent/20">
+                        <i class="fa-solid fa-robot text-2xl text-brand-accent drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]"></i>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-accent mb-3">Product &middot; Demo</span>
+                    <h3 class="text-xl font-bold text-white mb-3">AI Chatbot Service</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm flex-grow">An embeddable, multi-bot chat assistant you can drop into any website with one line of code — each bot with its own persona, powered by Claude or open models. It's live on this very page: open the bubble at the bottom-right.</p>
+                    <div class="mt-auto pt-5">
+                        <a href="https://vibecodeweb.in/chatbot/demo" target="_blank" rel="noopener noreferrer"
+                            class="inline-flex items-center gap-2 text-brand-accent font-semibold text-sm hover:gap-3 transition-all">
                             Launch Demo <i class="fa-solid fa-arrow-right text-xs"></i>
                         </a>
                     </div>
@@ -1388,73 +1409,58 @@
             chatbotToggle.addEventListener('click', toggleChatbot);
             chatbotClose.addEventListener('click', toggleChatbot);
 
-            let chatState = 'SELECT_SERVICE';
-            let selectedService = '';
             let currentTypingId = null;
 
-            // Handle Service Selection
+            // --- Live chatbot: wired to the VibeCodeWeb chatbot service ---
+            const CHAT_API = 'https://vibecodeweb.in/chatbot/api/chat';
+            const CHAT_KEY = 'cbk_70ffb3dc6d80a2b035b327577b149a576a4f1d5c0eb29e87';
+            let chatSession = '';
+            let chatSending = false;
+
+            async function sendToBot(msg) {
+                if (chatSending || !msg) return;
+                chatSending = true;
+                appendUserMsg(msg);
+                chatInput.value = '';
+                showTyping();
+                try {
+                    const res = await fetch(CHAT_API, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-Api-Key': CHAT_KEY },
+                        body: JSON.stringify({ message: msg, session_token: chatSession })
+                    });
+                    const data = await res.json();
+                    removeTyping();
+                    if (data.session_token) chatSession = data.session_token;
+                    if (data.ok) {
+                        appendBotMsg(escapeHTML(data.reply).replace(/\n/g, '<br>'));
+                    } else {
+                        appendBotMsg('⚠️ ' + escapeHTML(data.error || 'Something went wrong. Please try again.'));
+                    }
+                } catch (err) {
+                    removeTyping();
+                    appendBotMsg('⚠️ Connection error — please try again, or reach us on WhatsApp.');
+                }
+                chatSending = false;
+            }
+
+            // Service quick-pick buttons send a starter prompt to the bot
             document.querySelectorAll('.service-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    if (chatState !== 'SELECT_SERVICE') return;
-
-                    selectedService = e.target.getAttribute('data-service');
-                    appendUserMsg(selectedService);
-
-                    // Disable buttons
+                    const service = e.target.getAttribute('data-service');
                     const optionsDiv = document.getElementById('service-options');
                     if (optionsDiv) {
                         optionsDiv.style.opacity = '0.5';
                         optionsDiv.style.pointerEvents = 'none';
                     }
-
-                    showTyping();
-                    setTimeout(() => {
-                        removeTyping();
-                        appendBotMsg("Great choice! Please provide your contact number/email and a brief message about your requirements.");
-                        chatState = 'COLLECT_INFO';
-                        chatInput.focus();
-                    }, 1000);
+                    sendToBot(`I'm interested in ${service}. Can you tell me more?`);
                 });
             });
 
-            // Handle Chat Submission
+            // Free-text chat → bot
             chatForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const msg = chatInput.value.trim();
-                if (!msg) return;
-
-                if (chatState === 'SELECT_SERVICE') {
-                    appendUserMsg(msg);
-                    chatInput.value = '';
-                    showTyping();
-                    setTimeout(() => {
-                        removeTyping();
-                        appendBotMsg("Please select a service from the options above first, or let me know if you need something else.");
-                    }, 1000);
-                    return;
-                }
-
-                if (chatState === 'COLLECT_INFO') {
-                    appendUserMsg(msg);
-                    chatInput.value = '';
-                    showTyping();
-
-                    setTimeout(() => {
-                        removeTyping();
-                        appendBotMsg("Thanks! Redirecting you to WhatsApp to connect with our founder...");
-
-                        // Redirect to WhatsApp
-                        const phone = "919477443425";
-                        const waText = `Hi VibeCodeWeb!\n\nI'm interested in: ${selectedService}\n\nMy details/message: ${msg}`;
-                        const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(waText)}`;
-
-                        setTimeout(() => {
-                            window.open(waUrl, '_blank');
-                            chatState = 'SELECT_SERVICE';
-                        }, 1500);
-
-                    }, 1500);
-                }
+                sendToBot(chatInput.value.trim());
             });
 
             function appendUserMsg(msg) {
@@ -1590,8 +1596,6 @@
             }
         }
     </style>
-  <!-- VibeCodeWeb AI assistant (chatbot widget) -->
-  <script src="https://vibecodeweb.in/chatbot/embed.js?key=cbk_5320f7c2f407dab8dbd8092a6753bc3a918fc9176d950e06"></script>
 </body>
 
 </html>
