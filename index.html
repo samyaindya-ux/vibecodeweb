@@ -1411,10 +1411,9 @@
 
             let currentTypingId = null;
 
-            // --- Live chatbot: wired to the VibeCodeWeb chatbot service ---
-            const CHAT_API = 'https://vibecodeweb.in/chatbot/api/chat';
-            const CHAT_KEY = 'cbk_70ffb3dc6d80a2b035b327577b149a576a4f1d5c0eb29e87';
-            let chatSession = '';
+            // --- Live chatbot: Anthropic via same-origin proxy ---
+            const CHAT_API = 'chat.php';
+            let chatHistory = [];
             let chatSending = false;
 
             async function sendToBot(msg) {
@@ -1423,22 +1422,25 @@
                 appendUserMsg(msg);
                 chatInput.value = '';
                 showTyping();
+                chatHistory.push({ role: 'user', content: msg });
                 try {
                     const res = await fetch(CHAT_API, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-Api-Key': CHAT_KEY },
-                        body: JSON.stringify({ message: msg, session_token: chatSession })
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ messages: chatHistory })
                     });
                     const data = await res.json();
                     removeTyping();
-                    if (data.session_token) chatSession = data.session_token;
                     if (data.ok) {
+                        chatHistory.push({ role: 'assistant', content: data.reply });
                         appendBotMsg(escapeHTML(data.reply).replace(/\n/g, '<br>'));
                     } else {
+                        chatHistory.pop();
                         appendBotMsg('⚠️ ' + escapeHTML(data.error || 'Something went wrong. Please try again.'));
                     }
                 } catch (err) {
                     removeTyping();
+                    chatHistory.pop();
                     appendBotMsg('⚠️ Connection error — please try again, or reach us on WhatsApp.');
                 }
                 chatSending = false;
