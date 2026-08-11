@@ -80,7 +80,14 @@ Feature branches follow the pattern `claude/kebab-case-description-randomSuffix`
 
 ---
 
-## Instagram Automation (`ig-automation/`)
+## Instagram Automation
+
+> **⚠️ SUPERSEDED:** The automation has been migrated to a standalone CI4 app at
+> `I:\xampp\htdocs\ig_auto\` (repo: samyaindya-ux/ig_auto).
+> The `ig-automation/` folder below is the legacy PHP-only version — kept for rollback only.
+> All new work should go in ig_auto.
+
+### Legacy: `ig-automation/` (deprecated, kept for rollback)
 
 A review-gated publishing pipeline for **@vibecodeweb.in** using the official Instagram Graph API v21.0.
 
