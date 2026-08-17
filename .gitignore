@@ -16,3 +16,10 @@ ig-automation/.htpasswd
 ig-automation/logs/
 ig-automation/*.token
 ig-automation/token.json
+
+# Deploy secret — never commit
+deploy_secret.php
+
+# Fare Finder: generated on the server by cron, and the token-bearing updater
+farefinder/data.json
+farefinder/update-fares.php

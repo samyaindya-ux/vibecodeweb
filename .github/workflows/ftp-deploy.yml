@@ -13,11 +13,26 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Push files to server via HTTPS
+        env:
+          # Set this in the repo: Settings -> Secrets and variables -> Actions.
+          # It must match deploy_secret.php on the server.
+          SECRET: ${{ secrets.DEPLOY_SECRET }}
         run: |
-          DEPLOY_URL="https://vibecodeweb.in/deploy.php"
-          SECRET="vibe_deploy_2026"
-          FILES="index.html index2.html robots.txt tools.php"
+          set -euo pipefail
 
+          if [ -z "${SECRET:-}" ]; then
+            echo "DEPLOY_SECRET is not set in repository secrets."
+            exit 1
+          fi
+
+          DEPLOY_URL="https://vibecodeweb.in/deploy.php"
+          # Must match the ALLOWED list in deploy.php.
+          # farefinder/data.json and farefinder/update-fares.php are deliberately
+          # absent: one is generated on the server, the other holds the API token.
+          FILES="index.html index2.html robots.txt tools.php \
+                 farefinder/index.html farefinder/places.json"
+
+          FAILED=0
           for FILE in $FILES; do
             if [ ! -f "$FILE" ]; then
               echo "SKIP: $FILE (not in repo)"
@@ -25,14 +40,21 @@ jobs:
             fi
 
             CONTENT=$(base64 -w 0 "$FILE")
-            PAYLOAD=$(printf '{"file":"%s","content":"%s"}' "$FILE" "$CONTENT")
+            TS=$(date +%s)
+            PAYLOAD=$(printf '{"file":"%s","ts":%s,"content":"%s"}' "$FILE" "$TS" "$CONTENT")
             SIG=$(printf '%s' "$PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $2}')
 
             echo "Deploying $FILE..."
-            RESP=$(curl -s -X POST "$DEPLOY_URL" \
+            RESP=$(curl -sS --fail-with-body -X POST "$DEPLOY_URL" \
               -H "Content-Type: application/json" \
               -H "X-Deploy-Sig: $SIG" \
-              -d "$PAYLOAD")
+              -d "$PAYLOAD") || { echo "  FAILED: $RESP"; FAILED=1; continue; }
             echo "  $RESP"
           done
-          echo "All files deployed!"
+
+          # A deploy that silently half-worked is worse than one that fails.
+          if [ "$FAILED" -ne 0 ]; then
+            echo "One or more files failed to deploy."
+            exit 1
+          fi
+          echo "All files deployed."
